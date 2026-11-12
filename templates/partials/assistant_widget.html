@@ -1,0 +1,250 @@
+
+<!-- =========================================================
+     MARKET PLUS AI - FLOATING AI ASSISTANT
+     Reusable component for authenticated application pages
+========================================================= -->
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/assistant_widget.css') }}"
+>
+
+<div class="mpai-assistant" id="mpaiAssistant">
+
+    <!-- FLOATING ROBOT BUTTON -->
+    <button
+        type="button"
+        class="mpai-assistant-launcher"
+        id="mpaiAssistantLauncher"
+        aria-label="Open Market Plus AI Assistant"
+        aria-expanded="false"
+        aria-controls="mpaiAssistantPanel"
+        title="Ask Market Plus AI Assistant"
+    >
+        <span class="mpai-robot" aria-hidden="true">
+            <span class="mpai-robot-antenna"></span>
+            <span class="mpai-robot-head">
+                <span class="mpai-robot-eye"></span>
+                <span class="mpai-robot-eye"></span>
+                <span class="mpai-robot-mouth"></span>
+            </span>
+            <span class="mpai-robot-body">
+                <span class="mpai-robot-core">M+</span>
+            </span>
+        </span>
+
+        <span class="mpai-assistant-launcher-status"
+              id="mpaiAssistantLauncherStatus"></span>
+    </button>
+
+    <!-- ASSISTANT CHAT PANEL -->
+    <section
+        class="mpai-assistant-panel"
+        id="mpaiAssistantPanel"
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby="mpaiAssistantTitle"
+        aria-describedby="mpaiAssistantSubtitle"
+        hidden
+    >
+
+        <!-- HEADER -->
+        <header class="mpai-assistant-header">
+
+            <div class="mpai-assistant-header-info">
+
+                <div class="mpai-assistant-avatar" aria-hidden="true">
+                    <span class="mpai-robot-avatar-icon">M+</span>
+                    <span class="mpai-assistant-online-dot"
+                          id="mpaiAssistantOnlineDot"></span>
+                </div>
+
+                <div class="mpai-assistant-heading">
+
+                    <h2 id="mpaiAssistantTitle">
+                        Market Plus AI
+                    </h2>
+
+                    <p id="mpaiAssistantSubtitle">
+                        Your intelligent market assistant
+                    </p>
+
+                    <span class="mpai-assistant-status"
+                          id="mpaiAssistantStatus"
+                          aria-live="polite">
+                        Connecting...
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="mpai-assistant-header-actions">
+
+                <button
+                    type="button"
+                    class="mpai-assistant-icon-button"
+                    id="mpaiAssistantClearButton"
+                    aria-label="Clear conversation history"
+                    title="Clear conversation history"
+                >
+                    <span aria-hidden="true">⌫</span>
+                </button>
+
+                <button
+                    type="button"
+                    class="mpai-assistant-icon-button"
+                    id="mpaiAssistantCloseButton"
+                    aria-label="Close assistant"
+                    title="Close assistant"
+                >
+                    <span aria-hidden="true">×</span>
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- LOCAL AI NOTICE -->
+        <div class="mpai-assistant-notice">
+
+            <span aria-hidden="true">✦</span>
+
+            <span>
+                Powered by your local AI assistant.
+                Your conversations are stored in your application database.
+            </span>
+
+        </div>
+
+        <!-- CONVERSATION AREA -->
+        <div
+            class="mpai-assistant-messages"
+            id="mpaiAssistantMessages"
+            role="log"
+            aria-live="polite"
+            aria-relevant="additions text"
+            aria-label="Assistant conversation"
+        >
+
+            <!-- INITIAL GREETING -->
+            <article class="mpai-assistant-message assistant-message">
+
+                <div class="mpai-message-avatar" aria-hidden="true">
+                    M+
+                </div>
+
+                <div class="mpai-message-content">
+
+                    <div class="mpai-message-name">
+                        Market Plus AI
+                    </div>
+
+                    <div class="mpai-message-bubble">
+                        <p>
+                            Hello! I'm your Market Plus AI Assistant.
+                        </p>
+
+                        <p>
+                            I can help you understand market data,
+                            predictions, investment records, What-If
+                            scenarios, alerts, and application features.
+                        </p>
+
+                        <p>
+                            What would you like to know?
+                        </p>
+                    </div>
+
+                </div>
+
+            </article>
+
+        </div>
+
+        <!-- QUICK QUESTIONS -->
+        <div class="mpai-assistant-quick-prompts"
+             id="mpaiAssistantQuickPrompts">
+
+            <button type="button" data-assistant-prompt="Explain the current page and its features.">
+                Explain this page
+            </button>
+
+            <button type="button" data-assistant-prompt="Summarize my recent activity in Market Plus AI.">
+                My recent activity
+            </button>
+
+            <button type="button" data-assistant-prompt="Explain how I should understand AI stock predictions and their limitations.">
+                Explain predictions
+            </button>
+
+        </div>
+
+        <!-- ERROR MESSAGE -->
+        <div
+            class="mpai-assistant-error"
+            id="mpaiAssistantError"
+            role="alert"
+            hidden
+        ></div>
+
+        <!-- INPUT AREA -->
+        <form
+            class="mpai-assistant-form"
+            id="mpaiAssistantForm"
+            autocomplete="off"
+        >
+
+            <label
+                class="visually-hidden"
+                for="mpaiAssistantInput"
+            >
+                Ask Market Plus AI Assistant
+            </label>
+
+            <div class="mpai-assistant-input-wrapper">
+
+                <textarea
+                    id="mpaiAssistantInput"
+                    name="question"
+                    placeholder="Ask me anything..."
+                    rows="1"
+                    maxlength="2000"
+                    required
+                    aria-label="Enter your question"
+                ></textarea>
+
+                <button
+                    type="submit"
+                    class="mpai-assistant-send-button"
+                    id="mpaiAssistantSendButton"
+                    aria-label="Send message"
+                    title="Send message"
+                >
+                    <span aria-hidden="true">➤</span>
+                </button>
+
+            </div>
+
+            <div class="mpai-assistant-input-footer">
+
+                <span>
+                    Enter to send · Shift + Enter for a new line
+                </span>
+
+                <span>
+                    Local AI · No cloud API
+                </span>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
+
+<script
+    src="{{ url_for('static', filename='js/assistant_widget.js') }}"
+    defer
+></script>

@@ -1,0 +1,14 @@
+Flask>=3.1,<4.0
+Flask-Cors>=5.0,<6.0
+python-dotenv>=1.0,<2.0
+Werkzeug>=3.1,<4.0
+
+yfinance>=0.2.65
+pandas>=2.2
+numpy>=2.0
+
+scikit-learn>=1.6
+torch>=2.10
+
+requests>=2.32
+joblib>=1.4

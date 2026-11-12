@@ -1,0 +1,145 @@
+# ============================================================
+# MARKET PLUS AI - GIT IGNORE CONFIGURATION
+# ============================================================
+
+# ------------------------------------------------------------
+# Environment variables and secrets
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# Private credentials and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# ------------------------------------------------------------
+# Python virtual environments
+# ------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# ------------------------------------------------------------
+# Python generated files
+# ------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+
+# Python packaging and build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+pip-wheel-metadata/
+
+# ------------------------------------------------------------
+# Testing and coverage artifacts
+# ------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+test-results/
+coverage.xml
+
+# ------------------------------------------------------------
+# IDE and editor settings
+# ------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------
+# Operating system files
+# ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ------------------------------------------------------------
+# Logs and temporary files
+# ------------------------------------------------------------
+logs/
+*.log
+*.log.*
+*.tmp
+*.temp
+
+# ------------------------------------------------------------
+# Local databases and database backups
+# ------------------------------------------------------------
+data/*.db
+data/*.db-journal
+data/*.sqlite
+data/*.sqlite3
+data/*.bak
+*.sqlite-wal
+*.sqlite-shm
+
+# ------------------------------------------------------------
+# Downloaded market data and temporary datasets
+# ------------------------------------------------------------
+data/cache/
+data/historical/
+data/catalog/
+data/downloads/
+*.parquet.tmp
+
+# ------------------------------------------------------------
+# Generated machine-learning artifacts
+# ------------------------------------------------------------
+models/
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.keras
+*.onnx
+
+# ------------------------------------------------------------
+# Generated reports and exports
+# ------------------------------------------------------------
+reports/generated/
+exports/
+*.xlsx
+*.xls
+*.csv.tmp
+
+# ------------------------------------------------------------
+# Frontend dependencies and build output
+# ------------------------------------------------------------
+node_modules/
+.npm/
+.parcel-cache/
+dist/
+
+# ------------------------------------------------------------
+# Local environment and debugging files
+# ------------------------------------------------------------
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+debug.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+# Exclude local backups and generated files
+app.py.before-page-routing-fix
+app.py.dashboard-backup
+app_backup_before_investment.py
+prediction_validation_results.csv

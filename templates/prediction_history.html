@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="description" content="Review Market Plus AI prediction history, live targets and completed predictions.">
+
+    <title>Prediction History | Market Plus AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prediction_history.css') }}">
+
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/prediction_history.js') }}" defer></script>
+</head>
+
+<body class="app-page prediction-history-page">
+
+<div class="app-layout" id="predictionHistoryPage">
+
+    <!-- SIDEBAR -->
+
+    <aside class="app-sidebar" id="appSidebar">
+
+        <a class="sidebar-brand" href="{{ url_for('dashboard') }}">
+            <span class="brand-mark">M+</span>
+            <span class="brand-copy">
+                <strong>Market Plus</strong>
+                <small>AI Intelligence</small>
+            </span>
+        </a>
+
+        <div class="sidebar-section-label">WORKSPACE</div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+
+            <a class="sidebar-link" href="{{ url_for('dashboard') }}">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('stock_search') }}">
+                <span class="nav-icon">⌕</span>
+                <span>Explore Assets</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('predictions') }}">
+                <span class="nav-icon">↗</span>
+                <span>AI Predictions</span>
+            </a>
+
+            <a class="sidebar-link active"
+               href="{{ url_for('prediction_history') }}"
+               aria-current="page">
+                <span class="nav-icon">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('news_sentiment') }}">
+                <span class="nav-icon">▤</span>
+                <span>News &amp; Sentiment</span>
+            </a>
+
+             <a class="sidebar-link" href="{{ url_for('what_if_market') }}">
+                <span class="nav-icon">◉</span>
+                <span>What-If Market</span>
+            </a>
+            <a class="sidebar-link" href="{{ url_for('alerts') }}">
+                <span class="nav-icon">♧</span>
+                <span>Price Alerts</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('profile') }}">
+                <span class="nav-icon">◎</span>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-status">
+                <span class="status-dot"></span>
+                <span>Prediction workspace</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="app-main">
+
+        <!-- TOPBAR -->
+
+        <header class="app-topbar">
+
+            <div class="topbar-left">
+
+                <button class="mobile-menu-button"
+                        id="mobileMenuButton"
+                        type="button"
+                        aria-label="Open navigation menu"
+                        aria-expanded="false">
+                    ☰
+                </button>
+
+                <div>
+                    <div class="topbar-eyebrow">YOUR PREDICTION RECORDS</div>
+                    <h1>Prediction History</h1>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+                <span class="topbar-date" id="historyPageDate">Your activity</span>
+
+                <a class="topbar-avatar"
+                   id="topbarAvatar"
+                   href="{{ url_for('profile') }}">MP</a>
+            </div>
+
+        </header>
+
+        <section class="history-page">
+
+            <!-- PAGE HEADING -->
+
+            <div class="history-heading">
+
+                <div>
+                    <span class="history-eyebrow">PERFORMANCE TRACKING</span>
+
+                    <h2>Your Prediction History</h2>
+
+                    <p>
+                        Monitor live stock prices, track prediction targets
+                        and review your completed prediction records.
+                    </p>
+                </div>
+
+                <div class="history-heading-actions">
+
+                    <button class="history-button"
+                            id="refreshHistoryButton"
+                            type="button">
+                        <span aria-hidden="true">↻</span>
+                        Refresh
+                    </button>
+
+                    <button class="history-button history-button-primary"
+                            id="exportHistoryButton"
+                            type="button">
+                        <span aria-hidden="true">⇩</span>
+                        Download PDF
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- STATUS MESSAGE -->
+
+            <div class="history-message"
+                 id="historyPageMessage"
+                 role="status"
+                 aria-live="polite"
+                 hidden></div>
+
+            <!-- PERFORMANCE SUMMARY -->
+
+            <section class="history-summary-grid"
+                     aria-label="Prediction performance summary">
+
+                <article class="history-summary-card">
+                    <div class="history-summary-icon">◷</div>
+                    <span class="history-summary-label">Total Predictions</span>
+                    <strong class="history-summary-value" id="historyCountValue">—</strong>
+                    <span class="history-summary-note">All saved prediction records</span>
+                </article>
+
+                <article class="history-summary-card">
+                    <div class="history-summary-icon">₹</div>
+                    <span class="history-summary-label">Recorded Profit / Loss</span>
+                    <strong class="history-summary-value" id="historyTotalProfitLoss">—</strong>
+                    <span class="history-summary-note">Synchronized with your Profile</span>
+                </article>
+
+                    
+
+            </section>
+
+            <!-- ALL PREDICTIONS -->
+
+            <section class="history-panel"
+                     aria-labelledby="historyPanelTitle"
+                     id="allPredictionsSection">
+
+                <div class="history-panel-header">
+
+                    <div>
+                        <h2 id="historyPanelTitle">All Predictions</h2>
+                        <p>
+                            Monitor pending predictions and their current
+                            market prices against AI target prices.
+                        </p>
+                    </div>
+
+                    <span class="history-count" id="historyResultCount">
+                        0 records
+                    </span>
+
+                </div>
+
+                <!-- FILTERS -->
+
+                <div class="history-filters">
+
+                    <input
+                        class="history-filter-control"
+                        id="historySearchInput"
+                        type="search"
+                        placeholder="Search symbol or asset name..."
+                        aria-label="Search prediction history"
+                        autocomplete="off"
+                    >
+
+                    <select class="history-filter-control"
+                            id="historyStatusFilter"
+                            aria-label="Filter by prediction status">
+
+                        <option value="all">All statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="monitoring">Monitoring</option>
+                        <option value="target_reached">Target reached</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="failed">Failed</option>
+
+                    </select>
+
+                    <select class="history-filter-control"
+                            id="historyPeriodFilter"
+                            aria-label="Filter by creation date">
+
+                        <option value="all">Any time</option>
+                        <option value="7">Last 7 days</option>
+                        <option value="30">Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                        <option value="365">Last year</option>
+
+                    </select>
+
+                    <select class="history-filter-control"
+                            id="historySortSelect"
+                            aria-label="Sort prediction history">
+
+                        <option value="newest">Newest first</option>
+                        <option value="oldest">Oldest first</option>
+                        <option value="price_high">Predicted price: high to low</option>
+                        <option value="price_low">Predicted price: low to high</option>
+
+                    </select>
+
+                </div>
+
+                <!-- LOADING -->
+
+                <div class="history-loading"
+                     id="historyLoadingState"
+                     hidden>
+
+                    <div class="history-loading-indicator"></div>
+
+                    <strong>Loading prediction history...</strong>
+
+                    <p>Retrieving your saved records and market prices.</p>
+
+                </div>
+
+                <!-- EMPTY STATE -->
+
+                <div class="history-empty"
+                     id="historyEmptyState"
+                     hidden>
+
+                    <div class="history-empty-icon">◷</div>
+
+                    <h3 id="historyEmptyTitle">No predictions found</h3>
+
+                    <p id="historyEmptyDescription">
+                        Your saved predictions will appear here.
+                    </p>
+
+                    <a class="history-button history-button-primary"
+                       href="{{ url_for('predictions') }}">
+                        Create a Prediction
+                    </a>
+
+                </div>
+
+                <!-- PENDING PREDICTIONS TABLE -->
+
+                <div class="history-table-wrap" id="historyTableContainer">
+
+                    <table class="history-table">
+
+                        <thead>
+                            <tr>
+                                <th scope="col">Asset</th>
+                                <th scope="col">AI Model</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Duration</th>
+                                <th scope="col">Entry Price</th>
+                                <th scope="col">Predicted Price</th>
+                                <th scope="col">Current Price</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="historyTableBody">
+
+                            <tr>
+                                <td colspan="9">
+                                    Loading your prediction records...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- PAGINATION -->
+
+                <div class="history-pagination"
+                     id="historyPagination"
+                     hidden>
+
+                    <span class="history-page-indicator"
+                          id="historyPageIndicator">
+                        Page 1 of 1
+                    </span>
+
+                    <div class="history-pagination-actions">
+
+                        <button class="history-button"
+                                id="historyPreviousPage"
+                                type="button"
+                                disabled>
+                            ← Previous
+                        </button>
+
+                        <button class="history-button"
+                                id="historyNextPage"
+                                type="button"
+                                disabled>
+                            Next →
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- COMPLETED PREDICTIONS -->
+
+            <section class="history-panel completed-predictions-panel"
+                     aria-labelledby="completedPredictionsTitle"
+                     id="completedPredictionsSection">
+
+                <div class="history-panel-header">
+
+                    <div>
+                        <h2 id="completedPredictionsTitle">
+                            Completed Predictions
+                        </h2>
+
+                        <p>
+                            Predictions whose target was reached and whose
+                            actual withdrawal outcome has been recorded.
+                        </p>
+                    </div>
+
+                    <span class="history-count"
+                          id="completedPredictionCount">
+                        0 completed
+                    </span>
+
+                </div>
+
+                <!-- COMPLETED TABLE -->
+
+                <div class="history-table-wrap"
+                     id="completedTableContainer">
+
+                    <table class="history-table">
+
+                        <thead>
+                            <tr>
+                                <th scope="col">Asset</th>
+                                <th scope="col">AI Model</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Duration</th>
+                                <th scope="col">Entry Price</th>
+                                <th scope="col">Predicted Target</th>
+                                <th scope="col">Actual Exit Price</th>
+                                <th scope="col">Completed On</th>
+                                <th scope="col">Outcome</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="completedTableBody">
+
+                            <tr>
+                                <td colspan="9">
+                                    Completed predictions will appear here.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- COMPLETED EMPTY STATE -->
+
+                <div class="history-empty"
+                     id="completedEmptyState"
+                     hidden>
+
+                    <div class="history-empty-icon">✓</div>
+
+                    <h3>No completed predictions yet</h3>
+
+                    <p>
+                        When a target is reached and an actual withdrawal
+                        outcome is recorded, the prediction will appear here.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- DISCLAIMER -->
+
+            <div class="history-disclaimer">
+
+                <strong>Important:</strong>
+
+                AI predictions are estimates and do not guarantee future
+                stock prices or profits. A target being reached does not
+                automatically mean a withdrawal or sale has occurred.
+                Actual exit prices and realized profit/loss are recorded
+                separately after the outcome is confirmed.
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+    {% include "partials/assistant_widget.html" %}
+
+</body>
+</html>

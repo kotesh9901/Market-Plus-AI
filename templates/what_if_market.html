@@ -1,0 +1,1021 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="description" content="Explore hypothetical stock scenarios, AI predictions, technical patterns and historical market similarities.">
+
+    <title>What-If Market | Market Plus AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/what_if_market.css') }}">
+
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/what_if_market.js') }}" defer></script>
+</head>
+
+<body class="app-page what-if-page">
+
+<div class="app-shell" id="whatIfPage">
+
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="app-sidebar" id="appSidebar">
+
+        <div class="sidebar-brand">
+            <div class="brand-logo">MP</div>
+            <div class="brand-details">
+                <h2>Market Plus AI</h2>
+                <span>Intelligent Market Platform</span>
+            </div>
+
+            <button
+                type="button"
+                class="sidebar-close-button"
+                id="sidebarCloseButton"
+                aria-label="Close menu">
+                &times;
+            </button>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+
+            <a class="sidebar-link" href="{{ url_for('dashboard') }}">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('stock_search') }}">
+                <span class="nav-icon">⌕</span>
+                <span>Explore Assets</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('predictions') }}">
+                <span class="nav-icon">↗</span>
+                <span>AI Predictions</span>
+            </a>
+
+            <a class="sidebar-link active"
+               href="{{ url_for('prediction_history') }}"
+               >
+                <span class="nav-icon">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('news_sentiment') }}">
+                <span class="nav-icon">▤</span>
+                <span>News &amp; Sentiment</span>
+            </a>
+
+             <a class="sidebar-link" href="{{ url_for('what_if_market') }}" aria-current="page">
+                <span class="nav-icon">◉</span>
+                <span>What-If Market</span>
+            </a>
+            <a class="sidebar-link" href="{{ url_for('alerts') }}">
+                <span class="nav-icon">♧</span>
+                <span>Price Alerts</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('profile') }}">
+                <span class="nav-icon">◎</span>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-indicator"></div>
+            <span>Market Plus AI</span>
+            <small>Version 1.0.0</small>
+        </div>
+
+    </aside>
+
+    <!-- Main content -->
+    <main class="app-main">
+
+        <!-- Topbar -->
+        <header class="app-topbar">
+
+            <div class="topbar-left">
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    aria-label="Open navigation">
+                    ☰
+                </button>
+
+                <div class="topbar-heading">
+                    <span class="topbar-breadcrumb">Market Analysis /</span>
+                    <h1>What-If Market</h1>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="topbar-date" id="whatIfPageDate">
+                    --
+                </div>
+
+                <a href="/profile" class="topbar-profile" aria-label="My profile">
+                    <span class="topbar-avatar" id="topbarAvatar">U</span>
+                </a>
+
+            </div>
+
+        </header>
+
+        <!-- Page content -->
+        <div class="page-content">
+
+            <!-- Page introduction -->
+            <section class="page-introduction">
+
+                <div class="page-introduction-text">
+                    <span class="section-eyebrow">AI MARKET SIMULATION</span>
+
+                    <h2>Explore Different Market Possibilities</h2>
+
+                    <p>
+                        Understand how different market movements could affect
+                        your investment. Compare hypothetical outcomes using
+                        AI prediction data and historical market behaviour.
+                    </p>
+                </div>
+
+                <div class="what-if-status">
+                    <span class="status-dot"></span>
+                    Scenario simulator
+                </div>
+
+            </section>
+
+            <!-- Global message -->
+            <div
+                class="page-message"
+                id="whatIfMessage"
+                role="status"
+                aria-live="polite"
+                hidden>
+            </div>
+
+            <!-- Prediction source card -->
+            <section class="prediction-source-card" id="predictionSourceCard">
+
+                <div class="source-card-icon">✦</div>
+
+                <div class="source-card-content">
+                    <span class="source-card-label">PREDICTION CONNECTION</span>
+
+                    <h3 id="sourcePredictionTitle">
+                        No prediction selected
+                    </h3>
+
+                    <p id="sourcePredictionDescription">
+                        Generate a prediction on the AI Predictions page.
+                        You can then open What-If Market to automatically
+                        transfer its stock and predicted price.
+                    </p>
+                </div>
+
+                <div class="source-card-status">
+                    <span id="sourcePredictionStatus" class="status-badge">
+                        Waiting for prediction
+                    </span>
+                </div>
+
+            </section>
+
+            <!-- Stock selection -->
+            <section class="what-if-card stock-selection-card">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow">STEP 01</span>
+                        <h2>Select an Asset</h2>
+                        <p>Search for a stock using its company name or symbol.</p>
+                    </div>
+                </div>
+
+                <div class="stock-search-wrapper">
+
+                    <label for="whatIfStockSearch">
+                        Search stock or company
+                    </label>
+
+                    <div class="stock-search-input-wrapper">
+
+                        <span class="search-icon">⌕</span>
+
+                        <input
+                            type="search"
+                            id="whatIfStockSearch"
+                            name="stock_search"
+                            placeholder="Example: TCS, INFY, Reliance..."
+                            autocomplete="off">
+
+                        <span
+                            class="search-loading"
+                            id="whatIfSearchLoading"
+                            hidden>
+                            Searching...
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="stock-suggestions"
+                        id="whatIfStockSuggestions"
+                        role="listbox"
+                        aria-label="Stock search suggestions"
+                        hidden>
+                    </div>
+
+                </div>
+
+                <!-- Selected stock quote -->
+                <div class="selected-stock-panel">
+
+                    <div class="selected-stock-information">
+
+                        <div class="selected-stock-heading">
+                            <div>
+                                <span class="selected-stock-label">
+                                    SELECTED ASSET
+                                </span>
+
+                                <h3 id="whatIfCompanyName">
+                                    No stock selected
+                                </h3>
+
+                                <span id="whatIfSelectedSymbol">
+                                    Search and select a stock
+                                </span>
+                            </div>
+
+                            <div class="selected-stock-price">
+                                <span>Current Market Price</span>
+
+                                <strong id="whatIfCurrentPriceDisplay">
+                                    --
+                                </strong>
+
+                                <span id="whatIfMarketChange">
+                                    --
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="quote-information">
+
+                            <div class="quote-information-item">
+                                <span>Currency</span>
+                                <strong id="whatIfCurrency">INR</strong>
+                            </div>
+
+                            <div class="quote-information-item">
+                                <span>Last updated</span>
+                                <strong id="whatIfQuoteTimestamp">--</strong>
+                            </div>
+
+                            <div class="quote-information-item">
+                                <span>Next refresh</span>
+                                <strong id="whatIfRefreshCountdown">15s</strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="secondary-button refresh-quote-button"
+                        id="refreshMarketPriceButton">
+                        ↻ Refresh Market Price
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- Scenario input -->
+            <section class="what-if-card scenario-input-card">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow">STEP 02</span>
+                        <h2>Configure Your Scenario</h2>
+                        <p>
+                            Adjust the values to explore hypothetical
+                            investment outcomes.
+                        </p>
+                    </div>
+                </div>
+
+                <form id="whatIfForm" novalidate>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="whatIfCurrentPrice">
+                                Current Price
+                            </label>
+
+                            <div class="input-with-prefix">
+                                <span class="input-prefix" id="whatIfCurrentCurrency">
+                                    ₹
+                                </span>
+
+                                <input
+                                    type="number"
+                                    id="whatIfCurrentPrice"
+                                    name="current_price"
+                                    min="0.01"
+                                    step="any"
+                                    placeholder="Enter current price"
+                                    required>
+                            </div>
+
+                            <small>
+                                Automatically filled from the latest market quote.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="whatIfPredictedPrice">
+                                AI Predicted Price
+                            </label>
+
+                            <div class="input-with-prefix">
+                                <span class="input-prefix" id="whatIfPredictedCurrency">
+                                    ₹
+                                </span>
+
+                                <input
+                                    type="number"
+                                    id="whatIfPredictedPrice"
+                                    name="predicted_price"
+                                    min="0.01"
+                                    step="any"
+                                    placeholder="Enter predicted price"
+                                    required>
+                            </div>
+
+                            <small>
+                                Automatically filled when prediction data is available.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="whatIfInvestmentAmount">
+                                Investment Amount
+                            </label>
+
+                            <div class="input-with-prefix">
+                                <span class="input-prefix" id="whatIfInvestmentCurrency">
+                                    ₹
+                                </span>
+
+                                <input
+                                    type="number"
+                                    id="whatIfInvestmentAmount"
+                                    name="investment_amount"
+                                    min="1"
+                                    step="any"
+                                    value="10000"
+                                    required>
+                            </div>
+
+                            <small>
+                                Enter the amount you want to simulate.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="whatIfDuration">
+                                Scenario Duration
+                            </label>
+
+                            <select
+                                id="whatIfDuration"
+                                name="duration"
+                                required>
+                                <option value="1">1 Day</option>
+                                <option value="7" selected>7 Days</option>
+                                <option value="30">30 Days</option>
+                                <option value="90">90 Days</option>
+                            </select>
+
+                            <small>
+                                Select the hypothetical scenario period.
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="primary-button"
+                            id="calculateWhatIfButton">
+
+                            <span id="calculateWhatIfButtonText">
+                                Calculate What-If Scenarios
+                            </span>
+
+                        </button>
+
+                        <button
+                            type="reset"
+                            class="secondary-button"
+                            id="resetWhatIfButton">
+                            Reset Inputs
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+            <!-- Price comparison -->
+            <section class="what-if-card comparison-section">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow">PRICE COMPARISON</span>
+                        <h2>Market Price Comparison</h2>
+                        <p>
+                            Compare the current price, AI prediction and
+                            your adjusted scenario price.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="comparison-grid">
+
+                    <div class="comparison-item">
+                        <span>Current Market Price</span>
+                        <strong id="comparisonCurrentPrice">--</strong>
+                        <small>Latest available quote</small>
+                    </div>
+
+                    <div class="comparison-item">
+                        <span>AI Predicted Price</span>
+                        <strong id="comparisonAIPredictedPrice">--</strong>
+                        <small>Prediction page value</small>
+                    </div>
+
+                    <div class="comparison-item">
+                        <span>Adjusted Scenario Price</span>
+                        <strong id="comparisonAdjustedPrice">--</strong>
+                        <small id="comparisonAdjustedMovementNote">
+                            Waiting for calculation
+                        </small>
+                        <small id="comparisonAdjustedMovement">--</small>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Scenario results -->
+            <section
+                class="what-if-results-section"
+                id="whatIfResultsSection"
+                hidden>
+
+                <div class="section-heading results-heading">
+
+                    <div>
+                        <span class="section-eyebrow">STEP 03</span>
+                        <h2>Scenario Analysis Results</h2>
+                        <p>
+                            Compare three hypothetical market conditions
+                            using your selected investment amount.
+                        </p>
+                    </div>
+
+                    <span
+                        class="status-badge"
+                        id="scenarioAnalysisStatus">
+                        Analysis ready
+                    </span>
+
+                </div>
+
+                <!-- Three scenarios -->
+                <div class="scenario-results-grid">
+
+                    <!-- Optimistic -->
+                    <article class="scenario-card optimistic-card">
+
+                        <div class="scenario-card-heading">
+                            <div>
+                                <span class="scenario-label">
+                                    OPTIMISTIC
+                                </span>
+                                <h3>Positive Market</h3>
+                            </div>
+
+                            <span class="scenario-symbol">↗</span>
+                        </div>
+
+                        <div class="scenario-price-block">
+                            <span>Hypothetical Future Price</span>
+                            <strong id="optimisticFuturePrice">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Final Investment Value</span>
+                            <strong id="optimisticFinalValue">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Profit / Loss</span>
+                            <strong id="optimisticProfitLoss">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Return on Investment</span>
+                            <strong id="optimisticROI">--</strong>
+                        </div>
+
+                    </article>
+
+                    <!-- Neutral -->
+                    <article class="scenario-card neutral-card">
+
+                        <div class="scenario-card-heading">
+                            <div>
+                                <span class="scenario-label">
+                                    NEUTRAL
+                                </span>
+                                <h3>Stable Market</h3>
+                            </div>
+
+                            <span class="scenario-symbol">→</span>
+                        </div>
+
+                        <div class="scenario-price-block">
+                            <span>Hypothetical Future Price</span>
+                            <strong id="neutralFuturePrice">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Final Investment Value</span>
+                            <strong id="neutralFinalValue">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Profit / Loss</span>
+                            <strong id="neutralProfitLoss">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Return on Investment</span>
+                            <strong id="neutralROI">--</strong>
+                        </div>
+
+                    </article>
+
+                    <!-- Pessimistic -->
+                    <article class="scenario-card pessimistic-card">
+
+                        <div class="scenario-card-heading">
+                            <div>
+                                <span class="scenario-label">
+                                    PESSIMISTIC
+                                </span>
+                                <h3>Negative Market</h3>
+                            </div>
+
+                            <span class="scenario-symbol">↘</span>
+                        </div>
+
+                        <div class="scenario-price-block">
+                            <span>Hypothetical Future Price</span>
+                            <strong id="pessimisticFuturePrice">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Final Investment Value</span>
+                            <strong id="pessimisticFinalValue">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Profit / Loss</span>
+                            <strong id="pessimisticProfitLoss">--</strong>
+                        </div>
+
+                        <div class="scenario-result-row">
+                            <span>Return on Investment</span>
+                            <strong id="pessimisticROI">--</strong>
+                        </div>
+
+                    </article>
+
+                </div>
+
+                <!-- Best and worst scenario -->
+                <div class="scenario-summary-grid">
+
+                    <div class="summary-card">
+                        <span>Best Scenario</span>
+                        <strong id="bestScenarioValue">--</strong>
+                    </div>
+
+                    <div class="summary-card">
+                        <span>Worst Scenario</span>
+                        <strong id="worstScenarioValue">--</strong>
+                    </div>
+
+                    <div class="summary-card">
+                        <span>Estimated Share Quantity</span>
+                        <strong id="whatIfQuantityValue">--</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Market chart -->
+            <section class="what-if-card chart-section">
+
+                <div class="section-heading chart-heading">
+
+                    <div>
+                        <span class="section-eyebrow">MARKET VISUALIZATION</span>
+                        <h2>Historical Market Chart</h2>
+                        <p>
+                            View historical price movement and compare
+                            reference prices.
+                        </p>
+                    </div>
+
+                    <div class="chart-controls">
+                        <label for="whatIfChartPeriod">Chart Period</label>
+
+                        <select id="whatIfChartPeriod">
+                            <option value="1mo">1 Month</option>
+                            <option value="3mo">3 Months</option>
+                            <option value="6mo">6 Months</option>
+                            <option value="1y" selected>1 Year</option>
+                            <option value="2y">2 Years</option>
+                            <option value="5y">5 Years</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="chart-status" id="whatIfChartDataStatus">
+                    Waiting for market data
+                </div>
+
+                <div class="what-if-chart-container">
+
+                    <div
+                        class="chart-placeholder"
+                        id="whatIfChartPlaceholder">
+                        <span class="chart-placeholder-icon">⌁</span>
+                        <p>Select a stock to load historical market data.</p>
+                    </div>
+
+                    <canvas
+                        id="whatIfMarketChart"
+                        aria-label="Historical stock price chart"
+                        role="img">
+                    </canvas>
+
+                </div>
+
+                <div class="chart-legend">
+                    <span class="legend-item">
+                        <i class="legend-current"></i>
+                        Historical Price
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-predicted"></i>
+                        AI Predicted Price
+                    </span>
+
+                    <span class="legend-item">
+                        <i class="legend-scenario"></i>
+                        Scenario Price
+                    </span>
+                </div>
+
+            </section>
+
+            <!-- Pattern analysis -->
+            <section class="what-if-card pattern-analysis-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-eyebrow">STEP 04</span>
+                        <h2>Historical Pattern Analysis</h2>
+                        <p>
+                            Discover technical chart patterns and historical
+                            price movements that resemble the selected stock.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="pattern-tools-grid">
+
+                    <!-- Technical patterns -->
+                    <div class="pattern-tool-card">
+
+                        <div class="pattern-tool-icon">⌁</div>
+
+                        <h3>Technical Pattern Detection</h3>
+
+                        <p>
+                            Search for chart patterns such as double top,
+                            double bottom, triangles, head and shoulders,
+                            inverse head and shoulders, doji and hammer.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            id="technicalPatternSearchButton">
+                            Detect Technical Patterns
+                        </button>
+
+                    </div>
+
+                    <!-- Historical similarity -->
+                    <div class="pattern-tool-card">
+
+                        <div class="pattern-tool-icon">⌘</div>
+
+                        <h3>Historical Similarity Search</h3>
+
+                        <p>
+                            Compare recent market movements with historical
+                            price behaviour to identify similar periods.
+                        </p>
+
+                        <div class="similarity-controls">
+
+                            <div class="form-group">
+                                <label for="similarityLookback">
+                                    Historical Lookback
+                                </label>
+
+                                <select id="similarityLookback">
+                                    <option value="90">90 Days</option>
+                                    <option value="180">180 Days</option>
+                                    <option value="365" selected>1 Year</option>
+                                    <option value="730">2 Years</option>
+                                    <option value="1825">5 Years</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="similarityMatchCount">
+                                    Number of Matches
+                                </label>
+
+                                <select id="similarityMatchCount">
+                                    <option value="3">3 Matches</option>
+                                    <option value="5" selected>5 Matches</option>
+                                    <option value="10">10 Matches</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            id="historicalSimilaritySearchButton">
+                            Search Historical Similarities
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- Pattern results -->
+                <div
+                    class="pattern-results-panel"
+                    id="patternResultsPanel">
+
+                    <div class="pattern-results-heading">
+                        <div>
+                            <h3>Pattern Search Results</h3>
+                            <p id="patternResultsSubtitle">
+                                Run a pattern search to see results.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="pattern-results-placeholder"
+                        id="patternResultsPlaceholder">
+                        <span>⌕</span>
+                        <p>
+                            No pattern analysis has been performed yet.
+                        </p>
+                    </div>
+
+                    <div
+                        class="pattern-results-list"
+                        id="patternResultsList">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Risk analysis -->
+            <section class="what-if-card risk-analysis-section">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow">RISK ASSESSMENT</span>
+                        <h2>Scenario Risk Analysis</h2>
+                        <p>
+                            Review the estimated risk level of the
+                            hypothetical scenario.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="risk-analysis-content">
+
+                    <div class="risk-meter-container">
+
+                        <div class="risk-meter-labels">
+                            <span>Low</span>
+                            <span>Moderate</span>
+                            <span>High</span>
+                        </div>
+
+                        <div class="risk-meter" id="whatIfRiskMeter">
+                            <div class="risk-meter-pointer" id="whatIfRiskPointer"></div>
+                        </div>
+
+                        <strong id="whatIfRiskLevel">
+                            Waiting for analysis
+                        </strong>
+
+                    </div>
+
+                    <div class="risk-explanation">
+                        <h3>Risk Explanation</h3>
+
+                        <p id="whatIfRiskExplanation">
+                            Calculate a scenario to view its risk assessment.
+                            This assessment is an analytical estimate and
+                            should not be treated as financial advice.
+                        </p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Save scenario and history -->
+            <section class="what-if-card scenario-history-section">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow">SCENARIO MANAGEMENT</span>
+                        <h2>Save Your Scenario</h2>
+                        <p>
+                            Save calculated scenarios for later review.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="save-scenario-controls">
+
+                    <div class="form-group">
+                        <label for="whatIfScenarioName">
+                            Scenario Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="whatIfScenarioName"
+                            name="scenario_name"
+                            maxlength="100"
+                            placeholder="Example: TCS 30-day analysis">
+                    </div>
+
+                    <button
+                        type="button"
+                        class="primary-button"
+                        id="saveWhatIfScenarioButton"
+                        disabled>
+                        Save Scenario
+                    </button>
+
+                </div>
+
+                <div class="history-heading">
+
+                    <div>
+                        <h3>Saved Scenario History</h3>
+                        <p>Review or remove your previously saved scenarios.</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="refreshWhatIfHistoryButton">
+                        ↻ Refresh History
+                    </button>
+
+                </div>
+
+                <div
+                    class="scenario-history-list"
+                    id="whatIfScenarioHistory">
+
+                    <div class="history-empty-state">
+                        <span>◷</span>
+                        <p>No saved scenarios available.</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Export report -->
+            <section class="what-if-card report-section">
+
+                <div class="report-content">
+
+                    <div>
+                        <span class="section-eyebrow">REPORT GENERATION</span>
+                        <h2>Export Scenario Report</h2>
+
+                        <p>
+                            Generate a PDF report containing your selected
+                            asset, scenario calculations, risk assessment
+                            and available pattern analysis.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="primary-button"
+                        id="exportWhatIfReportButton"
+                        disabled>
+                        ↓ Export PDF Report
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- Disclaimer -->
+            <section class="what-if-disclaimer">
+
+                <div class="disclaimer-icon">ⓘ</div>
+
+                <div>
+                    <h3>Important Financial Disclaimer</h3>
+
+                    <p>
+                        What-If Market provides hypothetical simulations
+                        based on supplied values, available market data
+                        and analytical calculations. Scenario outcomes,
+                        historical similarities and AI predictions are
+                        not guaranteed future results. They are not
+                        investment recommendations or financial advice.
+                        Actual market prices can change unexpectedly,
+                        and you may lose money when investing.
+                    </p>
+                </div>
+
+            </section>
+
+            <footer class="app-footer">
+                <p>
+                    © 2026 Market Plus AI. For educational and analytical
+                    purposes only.
+                </p>
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% include "partials/assistant_widget.html" %}
+</body>
+</html>

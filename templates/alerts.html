@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10172a">
+    <meta name="description" content="Create and manage personalized price alerts with Market Plus AI.">
+
+    <title>Price Alerts | Market Plus AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/alerts.css') }}">
+
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/alerts.js') }}" defer></script>
+</head>
+
+<body class="app-body alerts-page">
+
+<div class="app-layout">
+
+    <aside class="app-sidebar" id="appSidebar" aria-label="Main navigation">
+
+        <a class="sidebar-brand" href="{{ url_for('dashboard') }}">
+            <span class="brand-mark" aria-hidden="true">M+</span>
+            <span class="brand-copy">
+                <strong>Market Plus</strong>
+                <small>AI Intelligence</small>
+            </span>
+        </a>
+
+        <div class="sidebar-section-label">WORKSPACE</div>
+
+        <nav class="sidebar-nav">
+
+            <a class="sidebar-link" href="{{ url_for('dashboard') }}">
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('stock_search') }}">
+                <span class="sidebar-icon">⌕</span>
+                <span>Explore Assets</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('predictions') }}">
+                <span class="sidebar-icon">↗</span>
+                <span>AI Predictions</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('prediction_history') }}">
+                <span class="sidebar-icon">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('news_sentiment') }}">
+                <span class="sidebar-icon">▤</span>
+                <span>News &amp; Sentiment</span>
+            </a>
+
+            <a class="sidebar-link active"
+               href="{{ url_for('alerts') }}"
+               aria-current="page">
+                <span class="sidebar-icon">♧</span>
+                <span>Price Alerts</span>
+                <span class="sidebar-count" id="sidebarAlertCount" hidden>0</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-section-label">ACCOUNT</div>
+
+        <nav class="sidebar-nav">
+            <a class="sidebar-link" href="{{ url_for('profile') }}">
+                <span class="sidebar-icon">◉</span>
+                <span>My Profile</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-help-card">
+                <span class="help-card-icon">✦</span>
+                <strong>Stay informed</strong>
+                <p>Monitor selected prices without watching charts all day.</p>
+            </div>
+
+            <div class="sidebar-version">
+                Market Plus AI · v1.0.0
+            </div>
+
+        </div>
+
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="app-main">
+
+        <header class="app-topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-controls="appSidebar"
+                    aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <div class="topbar-heading">
+                    <span class="eyebrow">PRICE MONITORING</span>
+                    <h1>Price Alerts</h1>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+                <div class="topbar-user">
+
+                    <div class="topbar-avatar" id="topbarAvatar" aria-hidden="true">
+                        U
+                    </div>
+
+                    <div class="topbar-user-copy">
+                        <span class="topbar-user-label">Welcome back</span>
+                        <strong id="topbarUserName">User</strong>
+                    </div>
+
+                </div>
+            </div>
+
+        </header>
+
+        <div class="app-content alerts-content">
+
+            <!-- INTRODUCTION -->
+
+            <section class="alerts-intro">
+
+                <div class="alerts-intro-copy">
+                    <span class="eyebrow">SMART PRICE MONITORING</span>
+
+                    <h2>Never miss your target.</h2>
+
+                    <p>
+                        Set your target price and let Market Plus AI
+                        monitor your selected assets. Receive automatic
+                        in-app, email, and SMS notifications when
+                        your target price is reached.
+                    </p>
+                </div>
+
+                <button
+                    class="button button-primary alerts-create-button"
+                    id="openCreateAlertButton"
+                    type="button">
+                    <span aria-hidden="true">＋</span>
+                    Create New Alert
+                </button>
+
+            </section>
+
+            <div
+                class="alerts-message"
+                id="alertsMessage"
+                role="status"
+                aria-live="polite"
+                hidden>
+            </div>
+
+            <!-- SUMMARY -->
+
+            <section class="alerts-summary-grid" aria-label="Alert summary">
+
+                <article class="alerts-summary-card">
+                    <div class="alerts-summary-top">
+                        <span class="alerts-summary-label">Total alerts</span>
+                        <span class="alerts-summary-icon total-icon">♧</span>
+                    </div>
+
+                    <div class="alerts-summary-value" id="totalAlertsValue">—</div>
+
+                    <p class="alerts-summary-caption">
+                        Alerts associated with your account
+                    </p>
+                </article>
+
+                <article class="alerts-summary-card">
+                    <div class="alerts-summary-top">
+                        <span class="alerts-summary-label">Active alerts</span>
+                        <span class="alerts-summary-icon active-icon">◉</span>
+                    </div>
+
+                    <div class="alerts-summary-value" id="activeAlertsValue">—</div>
+
+                    <p class="alerts-summary-caption">
+                        Waiting for your target price
+                    </p>
+                </article>
+
+                <article class="alerts-summary-card">
+                    <div class="alerts-summary-top">
+                        <span class="alerts-summary-label">Triggered alerts</span>
+                        <span class="alerts-summary-icon triggered-icon">✓</span>
+                    </div>
+
+                    <div class="alerts-summary-value" id="triggeredAlertsValue">—</div>
+
+                    <p class="alerts-summary-caption">
+                        Target prices reached
+                    </p>
+                </article>
+
+                <article class="alerts-summary-card">
+                    <div class="alerts-summary-top">
+                        <span class="alerts-summary-label">Last updated</span>
+                        <span class="alerts-summary-icon updated-icon">◷</span>
+                    </div>
+
+                    <div
+                        class="alerts-summary-value alerts-updated-value"
+                        id="alertsLastUpdated">
+                        —
+                    </div>
+
+                    <p class="alerts-summary-caption">
+                        Most recent page refresh
+                    </p>
+                </article>
+
+            </section>
+
+            <!-- ALERT WORKSPACE -->
+
+            <section class="alerts-panel">
+
+                <div class="alerts-panel-header">
+
+                    <div>
+                        <h3>Your alerts</h3>
+                        <p>Search and manage your saved alert records.</p>
+                    </div>
+
+                    <button
+                        class="button button-outline alerts-refresh-button"
+                        id="refreshAlertsButton"
+                        type="button">
+                        <span aria-hidden="true">↻</span>
+                        Refresh
+                    </button>
+
+                </div>
+
+                <div class="alerts-toolbar">
+
+                    <div class="alerts-search-box">
+                        <span class="alerts-search-icon">⌕</span>
+
+                        <input
+                            id="alertsSearchInput"
+                            type="search"
+                            name="search"
+                            placeholder="Search by asset or symbol..."
+                            autocomplete="off"
+                            aria-label="Search alerts">
+                    </div>
+
+                    <label class="alerts-filter-control">
+                        <span>Status</span>
+
+                        <select id="alertsStatusFilter" name="status">
+                            <option value="all">All alerts</option>
+                            <option value="active">Active</option>
+                            <option value="triggered">Triggered</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </label>
+
+                    <label class="alerts-filter-control">
+                        <span>Sort by</span>
+
+                        <select id="alertsSortSelect" name="sort">
+                            <option value="newest">Newest first</option>
+                            <option value="oldest">Oldest first</option>
+                            <option value="target_low">Target: low to high</option>
+                            <option value="target_high">Target: high to low</option>
+                        </select>
+                    </label>
+
+                </div>
+
+                <div class="alerts-results-bar">
+                    <span id="alertsResultCount">Loading alerts...</span>
+
+                    <button
+                        class="alerts-clear-filters"
+                        id="clearAlertsFiltersButton"
+                        type="button">
+                        Clear filters
+                    </button>
+                </div>
+
+                <div class="alerts-loading" id="alertsLoadingState">
+                    <span class="alerts-spinner"></span>
+                    <span>Loading your price alerts...</span>
+                </div>
+
+                <div
+                    class="alerts-list"
+                    id="alertsList"
+                    aria-live="polite">
+                </div>
+
+                <div
+                    class="alerts-empty-state"
+                    id="alertsEmptyState"
+                    hidden>
+
+                    <div class="alerts-empty-icon">♧</div>
+
+                    <h3 id="alertsEmptyTitle">No price alerts yet</h3>
+
+                    <p id="alertsEmptyDescription">
+                        Create your first alert to start monitoring
+                        your selected asset.
+                    </p>
+
+                    <button
+                        class="button button-primary"
+                        id="emptyCreateAlertButton"
+                        type="button">
+                        ＋ Create Your First Alert
+                    </button>
+
+                </div>
+
+                <div class="alerts-pagination" id="alertsPagination" hidden>
+
+                    <button
+                        class="button button-outline"
+                        id="alertsPreviousPage"
+                        type="button"
+                        disabled>
+                        ← Previous
+                    </button>
+
+                    <span id="alertsPageIndicator">Page 1</span>
+
+                    <button
+                        class="button button-outline"
+                        id="alertsNextPage"
+                        type="button"
+                        disabled>
+                        Next →
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- INFORMATION -->
+
+            <section class="alerts-information-grid">
+
+                <article class="alerts-information-card">
+                    <div class="alerts-information-icon">◎</div>
+
+                    <div>
+                        <h3>How price alerts work</h3>
+
+                        <p>
+                            Choose an asset and set your target price.
+                            Market Plus AI monitors the configured asset
+                            and triggers the alert when its price reaches
+                            or crosses your target.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="alerts-information-card">
+                    <div class="alerts-information-icon notification-icon">♧</div>
+
+                    <div>
+                        <h3>Automatic notifications</h3>
+
+                        <p>
+                            Every new alert is configured for in-app,
+                            email, and SMS notifications automatically.
+                            In-app and email delivery will be available
+                            first. SMS delivery will be activated after
+                            the SMS service integration is completed.
+                        </p>
+                    </div>
+                </article>
+
+            </section>
+
+            <footer class="alerts-disclaimer">
+                <span>ⓘ</span>
+
+                <p>
+                    <strong>Important:</strong>
+                    Price alerts are informational tools, not guarantees
+                    of execution or profit. Market prices can change
+                    rapidly. Data delays, service interruptions, and
+                    market closures may affect when an alert is detected.
+                    Always verify prices before making a financial decision.
+                </p>
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     CREATE ALERT MODAL
+     ===================================================== -->
+
+<div
+    class="alerts-modal"
+    id="createAlertModal"
+    aria-hidden="true"
+    hidden>
+
+    <div class="alerts-modal-backdrop" data-close-alert-modal></div>
+
+    <section
+        class="alerts-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="createAlertTitle">
+
+        <div class="alerts-modal-header">
+
+            <div>
+                <span class="eyebrow">PERSONALIZED MONITORING</span>
+
+                <h2 id="createAlertTitle">Create Price Alert</h2>
+
+                <p>
+                    Choose an asset and set your target price.
+                    We'll configure all notification channels automatically.
+                </p>
+            </div>
+
+            <button
+                class="alerts-modal-close"
+                id="closeCreateAlertButton"
+                type="button"
+                aria-label="Close create alert window">
+                ×
+            </button>
+
+        </div>
+
+        <form id="createAlertForm" novalidate>
+
+            <div class="alerts-form-grid">
+
+                <!-- ASSET SYMBOL -->
+
+                <div class="alerts-form-group alerts-form-full">
+
+                    <label for="alertSymbol">
+                        Asset Symbol
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <div class="alert-symbol-input-wrap">
+
+                        <span class="alert-input-icon" aria-hidden="true">⌕</span>
+
+                        <input
+                            type="text"
+                            id="alertSymbol"
+                            name="symbol"
+                            placeholder="Search company name or symbol (e.g. Infosys)"
+                            maxlength="50"
+                            autocomplete="off"
+                            spellcheck="false"
+                            required
+                            aria-autocomplete="list"
+                            aria-controls="alertSymbolSuggestions"
+                            aria-expanded="false">
+
+                        <span
+                            class="alert-symbol-search-indicator"
+                            id="alertSymbolSearchIndicator"
+                            hidden>
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="alert-symbol-suggestions"
+                        id="alertSymbolSuggestions"
+                        role="listbox"
+                        aria-label="Matching assets"
+                        hidden>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        id="alertSelectedSymbol"
+                        name="selected_symbol">
+
+                    <div class="alert-selected-asset" id="alertSelectedAsset" hidden>
+                        <span class="alert-selected-asset-icon">✓</span>
+                        <span id="alertSelectedAssetName"></span>
+
+                        <button
+                            type="button"
+                            id="clearAlertSelectedAsset"
+                            aria-label="Clear selected asset">
+                            Change
+                        </button>
+                    </div>
+
+                    <small>
+                        Search using a company name or ticker symbol.
+                        Select a matching asset from the suggestions.
+                    </small>
+
+                </div>
+
+                <!-- TARGET PRICE AND CURRENCY -->
+
+                <div class="alerts-form-group alerts-form-full">
+
+                    <label for="alertTargetPrice">
+                        Target Price
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <div class="alert-target-price-row">
+
+                        <div class="alert-currency-field">
+
+                            <label
+                                class="visually-hidden"
+                                for="alertCurrencySearch">
+                                Target price currency
+                            </label>
+
+                            <input
+                                type="search"
+                                id="alertCurrencySearch"
+                                name="currency_search"
+                                list="alertCurrencyOptions"
+                                placeholder="Search currency"
+                                autocomplete="off"
+                                spellcheck="false"
+                                aria-label="Search and select target price currency">
+
+                            <datalist id="alertCurrencyOptions">
+
+                                <option value="INR — Indian Rupee"></option>
+                                <option value="USD — US Dollar"></option>
+                                <option value="GBP — British Pound"></option>
+                                <option value="EUR — Euro"></option>
+                                <option value="CAD — Canadian Dollar"></option>
+                                <option value="AUD — Australian Dollar"></option>
+                                <option value="JPY — Japanese Yen"></option>
+                                <option value="AED — UAE Dirham"></option>
+                                <option value="SGD — Singapore Dollar"></option>
+                                <option value="CHF — Swiss Franc"></option>
+                                <option value="CNY — Chinese Yuan"></option>
+                                <option value="NZD — New Zealand Dollar"></option>
+                                <option value="SAR — Saudi Riyal"></option>
+                                <option value="BDT — Bangladeshi Taka"></option>
+                                <option value="PKR — Pakistani Rupee"></option>
+                                <option value="NPR — Nepalese Rupee"></option>
+                                <option value="LKR — Sri Lankan Rupee"></option>
+                                <option value="ZAR — South African Rand"></option>
+                                <option value="KRW — South Korean Won"></option>
+                                <option value="BRL — Brazilian Real"></option>
+                                <option value="MYR — Malaysian Ringgit"></option>
+                                <option value="IDR — Indonesian Rupiah"></option>
+                                <option value="THB — Thai Baht"></option>
+                                <option value="MXN — Mexican Peso"></option>
+                                <option value="NGN — Nigerian Naira"></option>
+                                <option value="KES — Kenyan Shilling"></option>
+                                <option value="EGP — Egyptian Pound"></option>
+                                <option value="TRY — Turkish Lira"></option>
+                                <option value="SEK — Swedish Krona"></option>
+                                <option value="NOK — Norwegian Krone"></option>
+                                <option value="DKK — Danish Krone"></option>
+                                <option value="PLN — Polish Zloty"></option>
+                                <option value="QAR — Qatari Riyal"></option>
+                                <option value="KWD — Kuwaiti Dinar"></option>
+                                <option value="BHD — Bahraini Dinar"></option>
+                                <option value="OMR — Omani Rial"></option>
+                                <option value="PHP — Philippine Peso"></option>
+                                <option value="VND — Vietnamese Dong"></option>
+                                <option value="ARS — Argentine Peso"></option>
+
+                            </datalist>
+
+                            <input
+                                type="hidden"
+                                id="alertCurrency"
+                                name="currency"
+                                value="INR">
+
+                        </div>
+
+                        <div class="alert-price-input-wrap">
+
+                            <span
+                                class="alert-price-currency-symbol"
+                                id="alertPriceCurrencySymbol">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                id="alertTargetPrice"
+                                name="target_price"
+                                placeholder="Enter target price"
+                                min="0.01"
+                                step="any"
+                                inputmode="decimal"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <small id="alertCurrencyHelp">
+                        The selected asset's trading currency will be
+                        detected automatically. You can search and
+                        select a different currency if required.
+                    </small>
+
+                </div>
+
+            </div>
+
+            <!-- DEFAULT NOTIFICATION CHANNELS -->
+
+            <input
+                type="hidden"
+                id="alertNotificationChannels"
+                name="notification_channels"
+                value="in_app,email,sms">
+
+            <input
+                type="hidden"
+                id="alertType"
+                name="alert_type"
+                value="target_reached">
+
+            <div class="alerts-automatic-notification-note">
+
+                <span class="alerts-information-icon notification-icon"
+                      aria-hidden="true">♧</span>
+
+                <div>
+                    <strong>All notifications are enabled automatically</strong>
+
+                    <p>
+                        In-app, email, and SMS notifications are configured
+                        for this alert. SMS delivery will become active
+                        after the SMS service is integrated.
+                    </p>
+                </div>
+
+            </div>
+
+            <div
+                class="alerts-form-message"
+                id="createAlertFormMessage"
+                role="alert"
+                aria-live="polite"
+                hidden>
+            </div>
+
+            <div class="alerts-modal-actions">
+
+                <button
+                    class="button button-outline"
+                    id="cancelCreateAlertButton"
+                    type="button">
+                    Cancel
+                </button>
+
+                <button
+                    class="button button-primary"
+                    id="submitCreateAlertButton"
+                    type="submit">
+                    <span aria-hidden="true">＋</span>
+                    Create Alert
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
+    {% include "partials/assistant_widget.html" %}
+
+</body>
+</html>

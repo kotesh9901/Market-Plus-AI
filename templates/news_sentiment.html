@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore company news, market updates, and AI-assisted sentiment analysis with Market Plus AI.">
+    <meta name="theme-color" content="#0b1020">
+
+    <title>News & Sentiment | Market Plus AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/news_sentiment.css') }}">
+
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/news_sentiment.js') }}" defer></script>
+</head>
+
+<body class="news-page">
+<div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+        <a href="{{ url_for('dashboard') }}" class="brand">
+            <span class="brand-icon">M+</span>
+            <span class="brand-copy">
+                <strong>Market Plus</strong>
+                <small>INTELLIGENCE PLATFORM</small>
+            </span>
+        </a>
+
+        <div class="sidebar-section-label">WORKSPACE</div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+            <a href="{{ url_for('dashboard') }}" class="nav-item">
+                <span class="nav-icon" aria-hidden="true">⌂</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('stock_search') }}" class="nav-item">
+                <span class="nav-icon" aria-hidden="true">⌕</span>
+                <span>Explore Assets</span>
+            </a>
+            <a href="{{ url_for('predictions') }}" class="nav-item">
+                <span class="nav-icon" aria-hidden="true">↗</span>
+                <span>AI Predictions</span>
+            </a>
+            <a href="{{ url_for('prediction_history') }}" class="nav-item">
+                <span class="nav-icon" aria-hidden="true">◷</span>
+                <span>Prediction History</span>
+            </a>
+            <a href="{{ url_for('news_sentiment') }}" class="nav-item active" aria-current="page">
+                <span class="nav-icon" aria-hidden="true">▤</span>
+                <span>News & Sentiment</span>
+            </a>
+            <a class="sidebar-link" href="{{ url_for('what_if_market') }}">
+                <span class="nav-icon">◉</span>
+                <span>What-If Market</span>
+                </a>
+            <a href="{{ url_for('alerts') }}" class="nav-item">
+                <span class="nav-icon" aria-hidden="true">♧</span>
+                <span>Price Alerts</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-status">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>Local application</strong>
+                    <small>Backend connection</small>
+                </div>
+            </div>
+
+            <a href="{{ url_for('profile') }}" class="nav-item">
+                <span class="nav-icon" aria-hidden="true">◎</span>
+                <span>My Profile</span>
+            </a>
+
+            <div class="sidebar-footer">
+                <span>Market Plus AI</span>
+                <span>Version 1.0.0</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button type="button" class="icon-button menu-toggle"
+                        id="menuToggle" aria-label="Toggle navigation"
+                        aria-expanded="false" aria-controls="sidebar">
+                    ☰
+                </button>
+
+                <div class="breadcrumb">
+                    <span>Workspace</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <strong>News & Sentiment</strong>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <span class="connection-indicator">
+                    <span class="status-dot"></span>
+                    API workspace
+                </span>
+                <a href="{{ url_for('profile') }}" class="profile-button">
+                    <span class="profile-avatar">MP</span>
+                    <span class="profile-label">My Account</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="page-container">
+
+            <section class="page-heading">
+                <div>
+                    <div class="eyebrow">
+                        <span class="eyebrow-line"></span>
+                        MARKET INTELLIGENCE
+                    </div>
+                    <h1>News <span>&</span> Sentiment</h1>
+                    <p class="page-description">
+                        Follow company updates, explore market stories, and understand
+                        the sentiment expressed in available news articles.
+                    </p>
+                </div>
+
+                <button type="button" class="button button-secondary" id="refreshAllButton">
+                    <span aria-hidden="true">↻</span>
+                    Refresh news
+                </button>
+            </section>
+
+            <section class="search-panel panel">
+                <div class="search-panel-copy">
+                    <span class="section-kicker">COMPANY RESEARCH</span>
+                    <h2>Find news about a company</h2>
+                    <p>Enter a stock symbol to load its available news and sentiment.</p>
+                </div>
+
+                <form id="stockNewsForm" class="stock-search-form">
+                    <label for="stockSymbol">Stock symbol</label>
+                    <div class="search-input-row">
+                        <div class="search-input-wrapper">
+                            <span class="search-input-icon" aria-hidden="true">⌕</span>
+                            <input type="text" id="stockSymbol" name="symbol"
+                                   placeholder="Try TCS.NS" value="TCS.NS"
+                                   maxlength="30" autocomplete="off"
+                                   spellcheck="false" required>
+                        </div>
+                        <button type="submit" class="button button-primary" id="searchButton">
+                            <span id="searchButtonText">Analyse news</span>
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    </div>
+                    <small class="field-help">
+                        Examples: TCS.NS, RELIANCE.NS, INFY.NS. Availability depends
+                        on the configured news provider.
+                    </small>
+                </form>
+            </section>
+
+            <div id="pageStatus" class="page-status" role="status"
+                 aria-live="polite" hidden></div>
+
+            <section class="section-block" aria-labelledby="sentimentHeading">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-kicker">SENTIMENT OVERVIEW</span>
+                        <h2 id="sentimentHeading">
+                            Company sentiment
+                            <span id="sentimentSymbol" class="symbol-badge">TCS.NS</span>
+                        </h2>
+                        <p>Approximate interpretation of the available company news.</p>
+                    </div>
+                    <span class="data-badge">
+                        <span class="status-dot"></span>
+                        News-based analysis
+                    </span>
+                </div>
+
+                <div class="sentiment-grid">
+                    <article class="sentiment-card sentiment-overall">
+                        <div class="sentiment-card-top">
+                            <span class="metric-label">OVERALL SENTIMENT</span>
+                            <span class="metric-symbol" aria-hidden="true">◉</span>
+                        </div>
+                        <div id="overallSentiment" class="overall-sentiment-value">
+                            Awaiting data
+                        </div>
+                        <p id="overallSentimentDescription">
+                            Search for a stock to load its news analysis.
+                        </p>
+                        <div class="sentiment-meter" aria-hidden="true">
+                            <span id="sentimentMeterFill"></span>
+                        </div>
+                        <div class="meter-labels">
+                            <span>Negative</span><span>Neutral</span><span>Positive</span>
+                        </div>
+                    </article>
+
+                    <article class="sentiment-card sentiment-positive">
+                        <div class="sentiment-card-top">
+                            <span class="metric-label">POSITIVE ARTICLES</span>
+                            <span class="sentiment-icon" aria-hidden="true">↗</span>
+                        </div>
+                        <div id="positiveCount" class="metric-value">—</div>
+                        <p>Articles classified as positive</p>
+                    </article>
+
+                    <article class="sentiment-card sentiment-neutral">
+                        <div class="sentiment-card-top">
+                            <span class="metric-label">NEUTRAL ARTICLES</span>
+                            <span class="sentiment-icon" aria-hidden="true">→</span>
+                        </div>
+                        <div id="neutralCount" class="metric-value">—</div>
+                        <p>Articles classified as neutral</p>
+                    </article>
+
+                    <article class="sentiment-card sentiment-negative">
+                        <div class="sentiment-card-top">
+                            <span class="metric-label">NEGATIVE ARTICLES</span>
+                            <span class="sentiment-icon" aria-hidden="true">↘</span>
+                        </div>
+                        <div id="negativeCount" class="metric-value">—</div>
+                        <p>Articles classified as negative</p>
+                    </article>
+                </div>
+
+                <div class="sentiment-note">
+                    <span class="note-icon" aria-hidden="true">ⓘ</span>
+                    <p>
+                        Sentiment is an estimate based on the news data and analysis
+                        returned by the application. It can misunderstand context,
+                        sarcasm, or financial terminology. It is not a price prediction
+                        or a guarantee of investment returns.
+                    </p>
+                </div>
+            </section>
+
+            <section class="section-block" aria-labelledby="companyNewsHeading">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-kicker">COMPANY COVERAGE</span>
+                        <h2 id="companyNewsHeading">Latest company news</h2>
+                        <p id="companyNewsDescription">
+                            Articles associated with your selected stock.
+                        </p>
+                    </div>
+                    <span id="companyArticleCount" class="count-badge">0 articles</span>
+                </div>
+
+                <div id="companyNewsLoading" class="loading-panel" hidden>
+                    <span class="loading-spinner" aria-hidden="true"></span>
+                    <span>Retrieving company news...</span>
+                </div>
+
+                <div id="companyNewsList" class="news-list" aria-live="polite">
+                    <div class="empty-state">
+                        <span class="empty-state-icon" aria-hidden="true">▤</span>
+                        <h3>Ready to explore</h3>
+                        <p>Search for a stock to see its available news articles.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-block" aria-labelledby="marketNewsHeading">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-kicker">MARKET WATCH</span>
+                        <h2 id="marketNewsHeading">Market news</h2>
+                        <p>General market articles returned by the configured provider.</p>
+                    </div>
+                    <button type="button" class="text-button" id="refreshMarketButton">
+                        Refresh <span aria-hidden="true">↻</span>
+                    </button>
+                </div>
+
+                <div id="marketNewsLoading" class="loading-panel" hidden>
+                    <span class="loading-spinner" aria-hidden="true"></span>
+                    <span>Retrieving market news...</span>
+                </div>
+
+                <div id="marketNewsList" class="market-news-grid" aria-live="polite">
+                    <div class="empty-state">
+                        <span class="empty-state-icon" aria-hidden="true">◷</span>
+                        <h3>Market updates</h3>
+                        <p>Available market articles will appear here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="page-footer">
+                <div class="footer-brand">
+                    <span class="brand-icon footer-brand-icon">M+</span>
+                    <div>
+                        <strong>Market Plus AI</strong>
+                        <span>Intelligent insights. Informed decisions.</span>
+                    </div>
+                </div>
+                <p class="footer-disclaimer">
+                    Informational use only. News availability and sentiment depend
+                    on the configured data provider. Nothing on this page guarantees
+                    investment performance.
+                </p>
+                <span class="footer-version">VERSION 1.0.0</span>
+            </footer>
+
+        </div>
+    </main>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" hidden></div>
+
+<!-- In-app article explanation -->
+<div class="article-modal" id="articleModal" hidden>
+    <div class="article-modal-backdrop" data-close-article></div>
+
+    <section class="article-dialog" role="dialog" aria-modal="true"
+             aria-labelledby="articleModalTitle">
+        <div class="article-modal-header">
+            <div>
+                <span class="section-kicker">NEWS EXPLAINER</span>
+                <span id="articleModalSymbol" class="symbol-badge">COMPANY NEWS</span>
+            </div>
+            <button type="button" class="modal-close-button" id="closeArticleModal"
+                    aria-label="Close article explanation">×</button>
+        </div>
+
+        <div class="article-modal-content">
+            <div class="article-meta" id="articleModalMeta">News article</div>
+            <h2 id="articleModalTitle">Article title</h2>
+
+            <div class="article-explanation-section">
+                <h3>What is this news about?</h3>
+                <p id="articleModalSummary"></p>
+            </div>
+
+            <div class="article-explanation-section">
+                <h3>Key points</h3>
+                <ul id="articleModalKeyPoints"></ul>
+            </div>
+
+            <div class="article-explanation-section impact-section">
+                <h3>Why might this matter?</h3>
+                <p id="articleModalImpact"></p>
+            </div>
+
+            <div class="article-explanation-section">
+                <h3>Sentiment classification</h3>
+                <div id="articleModalSentiment" class="article-sentiment-label">
+                    Not available
+                </div>
+                <p class="explanation-disclaimer">
+                    This label reflects the available article analysis only.
+                    It does not establish whether a stock price will rise or fall.
+                </p>
+            </div>
+
+            <div class="article-source-row">
+                <span>Source</span>
+                <strong id="articleModalSource">Not specified</strong>
+                <span id="articleModalDate"></span>
+            </div>
+        </div>
+
+        <div class="article-modal-footer">
+            <span>Market Plus AI · News explanation</span>
+            <button type="button" class="button button-primary" data-close-article>
+                Done
+            </button>
+        </div>
+    </section>
+</div>
+    {% include "partials/assistant_widget.html" %}
+
+</body>
+</html>

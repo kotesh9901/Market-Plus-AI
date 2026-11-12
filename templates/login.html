@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Market Plus AI</title>
+
+    <meta name="description"
+          content="Log in to Market Plus AI to explore intelligent asset predictions, market insights, and price alerts.">
+
+    <meta name="theme-color" content="#080d1a">
+
+    <!-- Common and page-specific CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/common.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/auth.css') }}">
+
+    <!-- Common and page-specific JavaScript -->
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
+</head>
+
+<body class="auth-page login-page">
+
+    <!-- Background Effects -->
+    <div class="auth-background" aria-hidden="true">
+        <div class="auth-glow auth-glow-one"></div>
+        <div class="auth-glow auth-glow-two"></div>
+        <div class="auth-grid"></div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="auth-header">
+
+        <a class="auth-brand"
+           href="{{ url_for('index') }}"
+           aria-label="Market Plus AI home">
+
+            <span class="brand-icon" aria-hidden="true">✦</span>
+
+            <span class="brand-text">
+                <span class="brand-name">Market Plus AI</span>
+                <span class="brand-subtitle">
+                    Intelligent Asset Prediction
+                </span>
+            </span>
+        </a>
+
+        <a class="auth-home-link"
+           href="{{ url_for('index') }}">
+            ← Back to Home
+        </a>
+
+    </header>
+
+    <!-- Main Content -->
+    <main class="auth-layout">
+
+        <!-- Left Showcase Section -->
+        <section class="auth-showcase">
+
+            <div class="showcase-badge">
+                <span class="status-dot"></span>
+                AI-Powered Market Intelligence
+            </div>
+
+            <h1 id="showcase-title">
+                Make smarter decisions with
+                <span class="gradient-text">Market Plus AI.</span>
+            </h1>
+
+            <p class="showcase-description">
+                Explore market trends, understand historical price movements,
+                and discover AI-generated predictions through one intelligent
+                platform.
+            </p>
+
+            <div class="showcase-features">
+
+                <article class="showcase-feature">
+                    <div class="feature-icon" aria-hidden="true">📈</div>
+
+                    <div>
+                        <h2>Intelligent Predictions</h2>
+                        <p>
+                            Explore estimated future prices using available
+                            historical market data.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="showcase-feature">
+                    <div class="feature-icon" aria-hidden="true">🌐</div>
+
+                    <div>
+                        <h2>Market Insights</h2>
+                        <p>
+                            Discover supported assets, review price movements,
+                            and explore market information.
+                        </p>
+                    </div>
+                </article>
+
+                <article class="showcase-feature">
+                    <div class="feature-icon" aria-hidden="true">🔔</div>
+
+                    <div>
+                        <h2>Personalized Price Alerts</h2>
+                        <p>
+                            Configure alerts to track price levels that matter
+                            to you.
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+
+            <p class="showcase-disclaimer">
+                Predictions are estimates based on available data.
+                Actual market prices may differ, and profits are not guaranteed.
+            </p>
+
+        </section>
+
+        <!-- Login Form Section -->
+        <section class="auth-form-section"
+                 aria-labelledby="login-title">
+
+            <div class="auth-card">
+
+                <div class="auth-card-heading">
+
+                    <div class="auth-mobile-logo" aria-hidden="true">
+                        ✦
+                    </div>
+
+                    <p class="form-eyebrow">WELCOME BACK</p>
+
+                    <h2 id="login-title">Sign in to your account</h2>
+
+                    <p class="auth-description">
+                        Enter your User ID or registered email address
+                        to continue.
+                    </p>
+
+                </div>
+
+                <!-- Login Status / Error Messages -->
+                <div id="loginMessage"
+                     class="auth-message"
+                     role="alert"
+                     aria-live="polite"
+                     hidden>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm"
+                      class="auth-form"
+                      novalidate>
+
+                    <div class="form-group">
+
+                        <label for="identifier">
+                            User ID or Email Address
+                        </label>
+
+                        <input
+                            type="text"
+                            id="identifier"
+                            name="identifier"
+                            placeholder="Enter your User ID or email"
+                            autocomplete="username"
+                            autocapitalize="none"
+                            spellcheck="false"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="form-label-row">
+                            <label for="password">Password</label>
+                        </div>
+
+                        <div class="password-input-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="password-toggle"
+                                aria-label="Show password"
+                                aria-pressed="false">
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="loginButton"
+                        class="auth-submit-button">
+
+                        <span class="button-label">Sign In</span>
+
+                        <span class="button-arrow"
+                              aria-hidden="true">→</span>
+
+                    </button>
+
+                </form>
+
+                <!-- Registration Link -->
+                <div class="auth-switch">
+                    <p>
+                        Don't have an account?
+                        <a href="{{ url_for('signup') }}">
+                            Create an account
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Security Information -->
+                <div class="auth-security-note">
+                    <span aria-hidden="true">🔒</span>
+                    <span>
+                        Your account is protected by secure authentication.
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="auth-footer">
+        <p>
+            &copy; <span id="currentYear"></span>
+            Market Plus AI. All rights reserved.
+        </p>
+
+        <p class="footer-note">
+            AI-powered insights. Informed decisions.
+        </p>
+    </footer>
+
+    <!-- Update the footer year -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const yearElement = document.getElementById("currentYear");
+
+            if (yearElement) {
+                yearElement.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+
+</body>
+</html>

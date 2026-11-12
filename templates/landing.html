@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="description" content="Market Plus AI helps you explore stock market data, AI-based forecasts, historical trends, and personalized price alerts.">
+    <meta name="application-name" content="Market Plus AI">
+
+    <title>Market Plus AI | Intelligent Stock Prediction</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/common.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/landing.css') }}">
+
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/landing.js') }}" defer></script>
+</head>
+
+<body class="landing-page">
+
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <!-- Navigation -->
+    <header class="navbar" id="siteHeader">
+        <a class="brand" href="{{ url_for('index') }}" aria-label="Market Plus AI home">
+            <span class="brand-icon" aria-hidden="true">M+</span>
+            <span>Market Plus <span class="brand-highlight">AI</span></span>
+        </a>
+
+        <nav class="nav-links" id="primaryNavigation" aria-label="Main navigation">
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="{{ url_for('login') }}" class="nav-login">Login</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-primary nav-signup">
+                Get Started <span aria-hidden="true">→</span>
+            </a>
+        </nav>
+
+        <button class="menu-toggle"
+                id="menuToggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-controls="primaryNavigation"
+                aria-expanded="false">
+            <span aria-hidden="true">☰</span>
+        </button>
+    </header>
+
+    <main id="main-content">
+
+        <!-- Hero -->
+        <section class="hero" aria-labelledby="heroTitle">
+
+            <div class="hero-content">
+
+                <div class="status-badge">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    AI-POWERED MARKET INTELLIGENCE
+                </div>
+
+                <h1 id="heroTitle">
+                    Understand the Market.<br>
+                    <span class="gradient-text">Predict with Intelligence.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Explore available market data, analyze historical trends,
+                    and discover AI-generated stock forecasts with Market Plus AI.
+                    Make more informed decisions with data-driven insights.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="{{ url_for('signup') }}"
+                       class="btn btn-primary btn-large">
+                        Start Exploring <span aria-hidden="true">→</span>
+                    </a>
+
+                    <a href="#features" class="btn btn-secondary btn-large">
+                        Discover Features
+                    </a>
+                </div>
+
+                <div class="hero-note" aria-label="Platform capabilities">
+                    <span><span aria-hidden="true">✓</span> Historical market analysis</span>
+                    <span><span aria-hidden="true">✓</span> AI-based forecasts</span>
+                    <span><span aria-hidden="true">✓</span> Price alerts</span>
+                </div>
+
+                <p class="hero-disclaimer">
+                    Forecasts are estimates and are not guaranteed to be accurate.
+                </p>
+
+            </div>
+
+            <!-- Illustrative market visualization; not live market data -->
+            <div class="hero-visual" aria-label="Illustration of market analysis">
+
+                <div class="orb orb-one" aria-hidden="true"></div>
+                <div class="orb orb-two" aria-hidden="true"></div>
+
+                <div class="market-card">
+
+                    <div class="card-top">
+                        <div>
+                            <span class="muted-label">MARKET INTELLIGENCE</span>
+                            <h2>AI Market Insights</h2>
+                        </div>
+
+                        <span class="live-badge">
+                            <span class="status-dot" aria-hidden="true"></span>
+                            Platform Preview
+                        </span>
+                    </div>
+
+                    <div class="chart-area">
+                        <div class="chart-grid" aria-hidden="true"></div>
+
+                        <svg viewBox="0 0 500 210"
+                             class="market-chart"
+                             role="img"
+                             aria-labelledby="illustrationChartTitle illustrationChartDescription"
+                             preserveAspectRatio="none">
+
+                            <title id="illustrationChartTitle">Illustrative market trend</title>
+
+                            <desc id="illustrationChartDescription">
+                                A decorative example of fluctuating prices.
+                                This chart does not represent a real stock or live market data.
+                            </desc>
+
+                            <defs>
+                                <linearGradient id="chartFill"
+                                                x1="0" y1="0"
+                                                x2="0" y2="1">
+                                    <stop offset="0%"
+                                          stop-color="#6c63ff"
+                                          stop-opacity="0.35"/>
+
+                                    <stop offset="100%"
+                                          stop-color="#6c63ff"
+                                          stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+
+                            <path
+                                d="M0 175 L45 150 L85 165 L125 115 L165 135 L210 95 L250 115 L295 60 L340 85 L380 35 L420 55 L465 18 L500 28 L500 210 L0 210 Z"
+                                fill="url(#chartFill)"/>
+
+                            <path
+                                d="M0 175 L45 150 L85 165 L125 115 L165 135 L210 95 L250 115 L295 60 L340 85 L380 35 L420 55 L465 18 L500 28"
+                                fill="none"
+                                stroke="#8b83ff"
+                                stroke-width="4"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="chart-line"/>
+                        </svg>
+                    </div>
+
+                    <div class="chart-footer">
+                        <div>
+                            <span class="muted-label">YOUR NEXT STEP</span>
+                            <p>Explore a stock to begin</p>
+                        </div>
+
+                        <div class="ai-symbol" aria-hidden="true">✦</div>
+                    </div>
+
+                    <div class="floating-chip chip-top">
+                        <span class="chip-icon" aria-hidden="true">✦</span>
+                        <span>AI-powered analysis</span>
+                    </div>
+
+                    <div class="floating-chip chip-bottom">
+                        <span class="chip-icon" aria-hidden="true">⌁</span>
+                        <span>Historical market trends</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Trust and capabilities -->
+        <section class="trust-strip" aria-label="Platform capabilities">
+            <div>
+                <span class="trust-icon" aria-hidden="true">◈</span>
+                <span>Data-driven insights</span>
+            </div>
+
+            <div>
+                <span class="trust-icon" aria-hidden="true">⌁</span>
+                <span>Historical price analysis</span>
+            </div>
+
+            <div>
+                <span class="trust-icon" aria-hidden="true">✦</span>
+                <span>AI-assisted predictions</span>
+            </div>
+
+            <div>
+                <span class="trust-icon" aria-hidden="true">◉</span>
+                <span>Personalized price alerts</span>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features-section" id="features" aria-labelledby="featuresTitle">
+
+            <div class="section-heading">
+                <span class="eyebrow">WHAT YOU CAN DO</span>
+
+                <h2 id="featuresTitle">
+                    Smarter tools for<br>
+                    <span class="gradient-text">market exploration.</span>
+                </h2>
+
+                <p>
+                    Explore prices, understand historical trends,
+                    evaluate forecasts, and monitor target prices
+                    through one user-friendly platform.
+                </p>
+            </div>
+
+            <div class="features-grid">
+
+                <article class="feature-card">
+                    <div class="feature-icon purple" aria-hidden="true">⌕</div>
+                    <h3>Stock Discovery</h3>
+                    <p>
+                        Search supported market symbols, discover available assets,
+                        and examine their historical prices.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon blue" aria-hidden="true">✦</div>
+                    <h3>AI Predictions</h3>
+                    <p>
+                        Explore model-generated forecasts based on available
+                        historical prices and technical indicators.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon green" aria-hidden="true">⌁</div>
+                    <h3>Market Analysis</h3>
+                    <p>
+                        Review historical price movements and technical indicators
+                        to understand potential market trends.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon orange" aria-hidden="true">♧</div>
+                    <h3>Price Alerts</h3>
+                    <p>
+                        Configure target-price alerts to help monitor
+                        selected assets.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon pink" aria-hidden="true">◎</div>
+                    <h3>News &amp; Sentiment</h3>
+                    <p>
+                        Explore available market news and sentiment analysis
+                        when supporting information is available.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon cyan" aria-hidden="true">◉</div>
+                    <h3>Personal Dashboard</h3>
+                    <p>
+                        Access your account, review saved forecasts,
+                        and manage personalized application features.
+                    </p>
+                </article>
+
+            </div>
+
+        </section>
+
+        <!-- About -->
+        <section class="about-section" id="about" aria-labelledby="aboutTitle">
+
+            <div class="about-card">
+                <div class="about-icon" aria-hidden="true">M+</div>
+
+                <div>
+                    <span class="eyebrow">ABOUT THE PROJECT</span>
+
+                    <h2 id="aboutTitle">Intelligence powered by data.</h2>
+
+                    <p>
+                        Market Plus AI is an AI-based stock and asset prediction
+                        project that combines available historical market data,
+                        analytical indicators, forecasting models, and market
+                        information in one user-friendly interface.
+                    </p>
+
+                    <p>
+                        The platform is designed to explain its forecasts and
+                        communicate data limitations instead of promising
+                        guaranteed investment returns.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Call to action -->
+        <section class="cta-section" aria-labelledby="ctaTitle">
+
+            <span class="eyebrow">BEGIN YOUR JOURNEY</span>
+
+            <h2 id="ctaTitle">
+                Explore markets with<br>
+                <span class="gradient-text">Market Plus AI.</span>
+            </h2>
+
+            <p>
+                Create an account to access the platform's available tools.
+            </p>
+
+            <a href="{{ url_for('signup') }}" class="btn btn-primary btn-large">
+                Create Your Account <span aria-hidden="true">→</span>
+            </a>
+
+            <p class="cta-login">
+                Already registered?
+                <a href="{{ url_for('login') }}">Log in to your account</a>
+            </p>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <a class="brand footer-brand"
+           href="{{ url_for('index') }}"
+           aria-label="Market Plus AI home">
+            <span class="brand-icon" aria-hidden="true">M+</span>
+            <span>Market Plus <span class="brand-highlight">AI</span></span>
+        </a>
+
+        <p>
+            AI-based market analysis for educational and informational use.
+        </p>
+
+        <p class="disclaimer">
+            Market data availability and timing depend on the data provider.
+            Forecasts are estimates, not guarantees of future performance
+            or investment returns. Market Plus AI does not execute trades.
+        </p>
+
+        <div class="footer-bottom">
+            &copy; 2026 Market Plus AI. All rights reserved.
+        </div>
+
+    </footer>
+
+</body>
+</html>

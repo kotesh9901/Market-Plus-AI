@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="description" content="Search stocks, compare the latest available prices, and explore daily market movements with Market Plus AI.">
+
+    <title>Explore Assets | Market Plus AI</title>
+
+    <!-- Shared application styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+
+    <!-- Stock search page styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stocks.css') }}">
+
+    <!-- Shared application JavaScript -->
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+
+    <!-- Stock search page JavaScript -->
+    <script src="{{ url_for('static', filename='js/stock_search.js') }}" defer></script>
+</head>
+
+<body class="app-page dashboard-page stock-search-page">
+
+    <div class="app-shell">
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="app-sidebar" id="dashboardSidebar">
+
+            <a href="{{ url_for('dashboard') }}" class="sidebar-brand">
+                <span class="sidebar-brand-icon" aria-hidden="true">M+</span>
+
+                <span class="sidebar-brand-text">
+                    <span class="sidebar-brand-name">Market Plus</span>
+                    <span class="sidebar-brand-subtitle">INTELLIGENT ASSETS</span>
+                </span>
+            </a>
+
+            <div class="sidebar-section-label">WORKSPACE</div>
+
+            <nav class="sidebar-navigation" aria-label="Main navigation">
+
+                <a href="{{ url_for('dashboard') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">⌂</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('stock_search') }}"
+                   class="sidebar-link active"
+                   aria-current="page">
+                    <span class="sidebar-link-icon" aria-hidden="true">⌕</span>
+                    <span>Explore Assets</span>
+                </a>
+
+                <a href="{{ url_for('predictions') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">⌁</span>
+                    <span>AI Predictions</span>
+                </a>
+
+                <a href="{{ url_for('prediction_history') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">◷</span>
+                    <span>Prediction History</span>
+                </a>
+
+                <a href="{{ url_for('news_sentiment') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">▤</span>
+                    <span>News &amp; Sentiment</span>
+                </a>
+
+                <a class="sidebar-link" href="{{ url_for('what_if_market') }}">
+                <span class="nav-icon">◉</span>
+                <span>What-If Market</span>
+                </a>
+                <a href="{{ url_for('alerts') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">♧</span>
+                    <span>Price Alerts</span>
+                    <span class="sidebar-link-badge" id="sidebarAlertCount" hidden>0</span>
+                </a>
+
+                <a href="{{ url_for('profile') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">◎</span>
+                    <span>My Profile</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-security-card">
+                    <span class="security-indicator" aria-hidden="true"></span>
+
+                    <div>
+                        <strong>Market Plus AI</strong>
+                        <p>Intelligent market insights</p>
+                    </div>
+                </div>
+
+                <button type="button" class="sidebar-logout-button" id="logoutButton">
+                    <span aria-hidden="true">↪</span>
+                    <span>Log out</span>
+                </button>
+            </div>
+
+        </aside>
+
+        <!-- Mobile sidebar overlay -->
+        <button
+            type="button"
+            class="sidebar-overlay"
+            id="sidebarOverlay"
+            aria-label="Close navigation menu"
+            hidden>
+        </button>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="app-main">
+
+            <!-- Top navigation -->
+            <header class="app-topbar">
+
+                <div class="topbar-left">
+                    <button
+                        type="button"
+                        class="mobile-menu-button"
+                        id="mobileMenuButton"
+                        aria-label="Open navigation menu"
+                        aria-controls="dashboardSidebar"
+                        aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="topbar-page-heading">
+                        <span class="topbar-eyebrow">MARKET DISCOVERY</span>
+                        <h1>Explore Assets</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <a href="{{ url_for('alerts') }}"
+                       class="topbar-icon-button"
+                       aria-label="View price alerts"
+                       title="Price alerts">
+                        ♧
+                    </a>
+
+                    <a href="{{ url_for('profile') }}" class="topbar-user">
+                        <span class="topbar-avatar" id="topbarAvatar">U</span>
+
+                        <span class="topbar-user-details">
+                            <strong id="topbarUserName">Your Account</strong>
+                            <span>Market Plus member</span>
+                        </span>
+                    </a>
+                </div>
+
+            </header>
+
+            <!-- Page content -->
+            <div class="page-content stock-search-content">
+
+                <!-- Search introduction -->
+                <section class="stock-search-hero">
+
+                    <div class="stock-search-hero-copy">
+
+                        <div class="section-eyebrow">
+                            <span class="eyebrow-indicator"></span>
+                            EXPLORE THE MARKET
+                        </div>
+
+                        <h2>
+                            Find your next
+                            <span class="gradient-text">opportunity.</span>
+                        </h2>
+
+                        <p>
+                            Search for a company or stock symbol to explore its
+                            latest available price, daily market movement, and
+                            detailed price history.
+                        </p>
+
+                    </div>
+
+                    <!-- Stock search form -->
+                    <form id="stockSearchForm"
+                          class="stock-search-form"
+                          role="search"
+                          autocomplete="off">
+
+                        <span class="stock-search-icon" aria-hidden="true">⌕</span>
+
+                        <label for="stockSearchInput" class="visually-hidden">
+                            Search by company name or stock symbol
+                        </label>
+
+                        <input
+                            type="search"
+                            id="stockSearchInput"
+                            name="q"
+                            placeholder="Search TCS, Infosys, RELIANCE..."
+                            aria-label="Search stocks by company name or symbol"
+                            aria-describedby="stockSearchHelp"
+                            minlength="1"
+                            maxlength="100"
+                            required>
+
+                        <button type="submit"
+                                id="stockSearchButton"
+                                class="stock-search-button">
+
+                            <span class="search-button-label">Search</span>
+
+                            <span class="search-button-loader"
+                                  aria-hidden="true"
+                                  hidden></span>
+
+                        </button>
+
+                    </form>
+
+                    <p id="stockSearchHelp" class="stock-search-help">
+                        Search by company name or supported market symbol.
+                    </p>
+
+                    <div id="stockSearchMessage"
+                         class="stock-search-message"
+                         role="status"
+                         aria-live="polite"
+                         hidden>
+                    </div>
+
+                </section>
+
+                <!-- Recommended stocks -->
+                <section class="stock-list-section" aria-labelledby="recommendedHeading">
+
+                    <div class="stock-section-heading">
+
+                        <div>
+                            <span class="section-eyebrow">QUICK DISCOVERY</span>
+                            <h2 id="recommendedHeading">Recommended Stocks</h2>
+                            <p class="section-description">
+                                Explore popular Indian stocks and their latest available market movements.
+                            </p>
+                        </div>
+
+                        <span class="market-data-badge">
+                            <span class="market-data-dot"></span>
+                            Provider data
+                        </span>
+
+                    </div>
+
+                    <!--
+                        JavaScript loads stock information from the backend.
+                        No sample prices or percentage changes are hard-coded.
+                    -->
+                    <div id="recommendedStocksContainer"
+                         class="stock-results-grid"
+                         aria-live="polite"
+                         aria-busy="true">
+
+                        <article class="stock-result-skeleton" aria-hidden="true">
+                            <div class="skeleton-line skeleton-short"></div>
+                            <div class="skeleton-line skeleton-medium"></div>
+                            <div class="skeleton-line skeleton-large"></div>
+                        </article>
+
+                        <article class="stock-result-skeleton" aria-hidden="true">
+                            <div class="skeleton-line skeleton-short"></div>
+                            <div class="skeleton-line skeleton-medium"></div>
+                            <div class="skeleton-line skeleton-large"></div>
+                        </article>
+
+                        <article class="stock-result-skeleton" aria-hidden="true">
+                            <div class="skeleton-line skeleton-short"></div>
+                            <div class="skeleton-line skeleton-medium"></div>
+                            <div class="skeleton-line skeleton-large"></div>
+                        </article>
+
+                    </div>
+
+                </section>
+
+                 
+
+                            <p id="stockResultsDescription" class="section-description">
+                                Search for a company or symbol to see matching assets.
+                            </p>
+                        </div>
+
+                        <span id="stockResultsCount" class="stock-results-count">
+                            Ready to search
+                        </span>
+
+                    </div>
+
+                    <div id="stockResultsContainer"
+                         class="stock-results-grid"
+                         aria-live="polite"
+                         aria-busy="false">
+
+                        <div class="stock-results-empty">
+                            <span class="empty-state-icon" aria-hidden="true">⌕</span>
+                            <h3>Search for a stock</h3>
+                            <p>
+                                Enter a company name or symbol above to view matching stocks,
+                                their available prices, and daily percentage changes.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- Data disclaimer -->
+                <footer class="stock-data-disclaimer">
+                    <span class="disclaimer-icon" aria-hidden="true">ⓘ</span>
+
+                    <p>
+                        Prices and percentage changes depend on the market-data provider
+                        and may be delayed. When the market is closed, the latest available
+                        quote may be displayed. Market information and AI predictions are
+                        for informational purposes only and do not guarantee investment returns.
+                    </p>
+                </footer>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    {% include "partials/assistant_widget.html" %}
+</body>
+</html>

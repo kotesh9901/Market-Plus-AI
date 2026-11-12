@@ -1,0 +1,2087 @@
+
+/* =========================================================
+   MARKET PLUS AI — PROFILE PAGE
+   File: static/css/profile.css
+   Version: 7.0.0
+
+   Matches:
+   templates/profile.html
+
+   Includes:
+   - Profile information and editing
+   - Investment tracker
+   - Asset search suggestions
+   - Open and completed investment tables
+   - Withdrawal modal (HTML class names matched)
+   - Responsive layouts
+   ========================================================= */
+
+/* =========================================================
+   1. PAGE FOUNDATION
+   ========================================================= */
+
+.profile-page {
+    --profile-bg: #0b0f1b;
+    --profile-card: #121827;
+    --profile-card-light: #182136;
+    --profile-input: #0d1423;
+    --profile-text: #f4f6ff;
+    --profile-muted: #9aa5bd;
+    --profile-border: #28334a;
+    --profile-primary: #756cff;
+    --profile-primary-light: #a49eff;
+    --profile-green: #35d6a3;
+    --profile-red: #ff7885;
+    --profile-yellow: #ffc66b;
+    --profile-radius: 18px;
+
+    min-height: 100vh;
+    background: var(--profile-bg);
+    color: var(--profile-text);
+}
+
+.profile-page *,
+.profile-page *::before,
+.profile-page *::after {
+    box-sizing: border-box;
+}
+
+.profile-page .app-main {
+    min-width: 0;
+    background: var(--profile-bg);
+}
+
+.profile-page .app-content {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 30px 34px 40px;
+    background: var(--profile-bg);
+}
+
+/* =========================================================
+   2. TOP BAR
+   ========================================================= */
+
+.profile-page .app-topbar {
+    min-height: 82px;
+    background: #111827;
+    border-bottom: 1px solid var(--profile-border);
+}
+
+.profile-page .topbar-heading .eyebrow {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--profile-primary-light);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.profile-page .topbar-heading h1 {
+    margin: 0;
+    color: var(--profile-text);
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+}
+
+.profile-page .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    padding: 5px 13px 5px 5px;
+    border: 1px solid var(--profile-border);
+    border-radius: 40px;
+    background: #192236;
+}
+
+.profile-page .topbar-avatar {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border: 1px solid rgba(117, 108, 255, 0.3);
+    border-radius: 14px;
+    background: linear-gradient(135deg, #eeeaff, #dcd8ff);
+    color: #5148d9;
+    font-size: 16px;
+    font-weight: 850;
+}
+
+.profile-page .topbar-user-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.profile-page .topbar-user-label {
+    color: var(--profile-muted);
+    font-size: 10px;
+}
+
+.profile-page .topbar-user-copy strong {
+    max-width: 170px;
+    overflow: hidden;
+    color: var(--profile-text);
+    font-size: 12px;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-page .logout-button {
+    min-height: 39px;
+    padding: 0 15px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+/* =========================================================
+   3. PROFILE INTRODUCTION
+   ========================================================= */
+
+.profile-page .profile-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    margin-bottom: 25px;
+}
+
+.profile-page .profile-intro .eyebrow {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--profile-primary-light);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.profile-page .profile-intro h2 {
+    margin: 0 0 9px;
+    color: var(--profile-text);
+    font-size: clamp(25px, 3vw, 33px);
+    font-weight: 850;
+    letter-spacing: -1px;
+}
+
+.profile-page .profile-intro p {
+    max-width: 680px;
+    margin: 0;
+    color: var(--profile-muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.profile-page .profile-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+    padding: 10px 14px;
+    border: 1px solid rgba(53, 214, 163, 0.2);
+    border-radius: 999px;
+    background: rgba(53, 214, 163, 0.08);
+    color: var(--profile-green);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.profile-page .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--profile-green);
+    box-shadow: 0 0 0 4px rgba(53, 214, 163, 0.1);
+}
+
+/* =========================================================
+   4. GENERAL MESSAGES AND LOADING
+   ========================================================= */
+
+.profile-page [hidden] {
+    display: none !important;
+}
+
+.profile-page .profile-message {
+    margin-bottom: 20px;
+    padding: 13px 16px;
+    border: 1px solid var(--profile-border);
+    border-radius: 11px;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.profile-page .profile-message.success {
+    border-color: rgba(53, 214, 163, 0.25);
+    background: rgba(53, 214, 163, 0.08);
+    color: var(--profile-green);
+}
+
+.profile-page .profile-message.error {
+    border-color: rgba(255, 120, 133, 0.25);
+    background: rgba(255, 120, 133, 0.08);
+    color: var(--profile-red);
+}
+
+.profile-page .profile-message.info {
+    border-color: rgba(117, 108, 255, 0.25);
+    background: rgba(117, 108, 255, 0.08);
+    color: var(--profile-primary-light);
+}
+
+.profile-page .profile-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 250px;
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-radius);
+    background: var(--profile-card);
+    color: var(--profile-muted);
+    font-size: 12px;
+}
+
+.profile-page .profile-loading-spinner {
+    width: 23px;
+    height: 23px;
+    border: 3px solid #34345b;
+    border-top-color: var(--profile-primary);
+    border-radius: 50%;
+    animation: profile-spin 0.8s linear infinite;
+}
+
+@keyframes profile-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   5. PROFILE GRID AND CARDS
+   ========================================================= */
+
+.profile-page .profile-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 22px;
+}
+
+.profile-page .profile-card {
+    min-width: 0;
+    padding: 26px;
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-radius);
+    background: var(--profile-card);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    animation: profile-card-enter 0.3s ease both;
+}
+
+@keyframes profile-card-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-page .profile-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 24px;
+}
+
+.profile-page .profile-heading-icon {
+    display: grid;
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    place-items: center;
+    border: 1px solid rgba(117, 108, 255, 0.25);
+    border-radius: 13px;
+    background: rgba(117, 108, 255, 0.12);
+    color: var(--profile-primary-light);
+    font-size: 19px;
+}
+
+.profile-page .profile-card-heading h3 {
+    margin: 0 0 5px;
+    color: var(--profile-text);
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.profile-page .profile-card-heading p {
+    margin: 0;
+    color: var(--profile-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   6. PROFILE IDENTITY
+   ========================================================= */
+
+.profile-page .profile-identity {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    padding: 20px;
+    border: 1px solid #34345e;
+    border-radius: 16px;
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(117, 108, 255, 0.17),
+            transparent 48%
+        ),
+        #192236;
+}
+
+.profile-page .profile-large-avatar {
+    display: grid;
+    width: 67px;
+    height: 67px;
+    flex: 0 0 67px;
+    place-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    background: linear-gradient(145deg, #756cff, #5148d9);
+    color: #fff;
+    font-size: 24px;
+    font-weight: 850;
+    text-transform: uppercase;
+}
+
+.profile-page .profile-identity-copy {
+    min-width: 0;
+}
+
+.profile-page .profile-identity-copy h2 {
+    overflow-wrap: anywhere;
+    margin: 0 0 6px;
+    color: var(--profile-text);
+    font-size: 19px;
+    font-weight: 850;
+}
+
+.profile-page .profile-identity-copy p {
+    overflow-wrap: anywhere;
+    margin: 0 0 10px;
+    color: var(--profile-muted);
+    font-size: 11px;
+}
+
+.profile-page .profile-user-id {
+    display: inline-block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: 6px 9px;
+    border: 1px solid #343c54;
+    border-radius: 7px;
+    background: #101827;
+    color: #c7cce0;
+    font-family: Consolas, monospace;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   7. PROFILE DETAILS
+   ========================================================= */
+
+.profile-page .profile-divider {
+    height: 1px;
+    margin: 23px 0;
+    background: var(--profile-border);
+}
+
+.profile-page .profile-details-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.profile-page .profile-detail-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--profile-border);
+}
+
+.profile-page .profile-detail-row:first-child {
+    padding-top: 0;
+}
+
+.profile-page .profile-detail-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.profile-page .profile-detail-row dt {
+    color: var(--profile-muted);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.profile-page .profile-detail-row dd {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    margin: 0;
+    color: var(--profile-text);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.6;
+    text-align: right;
+}
+
+.profile-page .risk-category-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border: 1px solid var(--profile-border);
+    border-radius: 999px;
+    background: #202a40;
+    color: #d1d6e8;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.profile-page .risk-category-badge.low {
+    border-color: rgba(53, 214, 163, 0.25);
+    background: rgba(53, 214, 163, 0.1);
+    color: var(--profile-green);
+}
+
+.profile-page .risk-category-badge.middle,
+.profile-page .risk-category-badge.medium {
+    border-color: rgba(255, 198, 107, 0.25);
+    background: rgba(255, 198, 107, 0.1);
+    color: var(--profile-yellow);
+}
+
+.profile-page .risk-category-badge.high {
+    border-color: rgba(255, 120, 133, 0.25);
+    background: rgba(255, 120, 133, 0.1);
+    color: var(--profile-red);
+}
+
+/* =========================================================
+   8. EDIT PROFILE
+   ========================================================= */
+
+.profile-page .profile-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.profile-page .profile-edit-actions .button {
+    min-height: 41px;
+    padding: 0 18px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.profile-page .profile-edit-form {
+    margin-top: 5px;
+    animation: profile-card-enter 0.25s ease both;
+}
+
+.profile-page .profile-edit-form .profile-card-heading {
+    margin-bottom: 20px;
+}
+
+.profile-page .profile-edit-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.profile-page .profile-edit-field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-page .profile-edit-field > span {
+    color: #cbd1e2;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.profile-page .profile-edit-field input,
+.profile-page .profile-edit-field select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 11px 13px;
+    border: 1px solid #303b53;
+    border-radius: 10px;
+    outline: none;
+    background: var(--profile-input);
+    color: var(--profile-text);
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.profile-page .profile-edit-field input:focus,
+.profile-page .profile-edit-field select:focus {
+    border-color: var(--profile-primary);
+    box-shadow: 0 0 0 3px rgba(117, 108, 255, 0.13);
+}
+
+.profile-page .profile-edit-field input[readonly] {
+    background: #1a2235;
+    color: #929bb3;
+    cursor: not-allowed;
+}
+
+.profile-page .profile-edit-field select {
+    color-scheme: dark;
+    cursor: pointer;
+}
+
+.profile-page .profile-edit-field small {
+    color: var(--profile-muted);
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.profile-page .profile-edit-user-id {
+    grid-column: 1 / -1;
+    max-width: 50%;
+}
+
+.profile-page .profile-edit-message {
+    margin-top: 17px;
+    padding: 12px 14px;
+    border: 1px solid var(--profile-border);
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+.profile-page .profile-edit-message.success {
+    border-color: rgba(53, 214, 163, 0.25);
+    background: rgba(53, 214, 163, 0.08);
+    color: var(--profile-green);
+}
+
+.profile-page .profile-edit-message.error {
+    border-color: rgba(255, 120, 133, 0.25);
+    background: rgba(255, 120, 133, 0.08);
+    color: var(--profile-red);
+}
+
+.profile-page .profile-edit-message.info {
+    color: var(--profile-primary-light);
+}
+
+.profile-page .profile-edit-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-top: 20px;
+}
+
+.profile-page .profile-edit-form-actions .button {
+    min-height: 41px;
+    padding: 0 17px;
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* =========================================================
+   9. BUTTONS
+   ========================================================= */
+
+.profile-page .button-primary {
+    border: 1px solid rgba(164, 158, 255, 0.35);
+    background: linear-gradient(110deg, #756cff, #496fe8);
+    color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-page .button-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 20px rgba(79, 70, 229, 0.25);
+}
+
+.profile-page .button-outline {
+    border: 1px solid #39445c;
+    background: #202a40;
+    color: #d4d9e9;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.profile-page .button-outline:hover {
+    border-color: var(--profile-primary);
+    background: #29314c;
+    color: #fff;
+}
+
+.profile-page button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* =========================================================
+   10. PROFILE INFORMATION NOTE
+   ========================================================= */
+
+.profile-page .profile-information-note,
+.profile-page .profile-performance-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 23px;
+    padding: 13px 14px;
+    border: 1px solid #303a53;
+    border-radius: 11px;
+    background: #192236;
+}
+
+.profile-page .profile-information-note > span,
+.profile-page .profile-performance-note > span {
+    flex-shrink: 0;
+    color: var(--profile-primary-light);
+    font-size: 15px;
+}
+
+.profile-page .profile-information-note p,
+.profile-page .profile-performance-note p {
+    margin: 0;
+    color: #b2bad0;
+    font-size: 10px;
+    line-height: 1.85;
+}
+
+/* =========================================================
+   11. INVESTMENT TRACKER
+   ========================================================= */
+
+.profile-page .investment-tracker-card {
+    grid-column: 1 / -1;
+    min-width: 0;
+    margin-top: 2px;
+}
+
+.profile-page .investment-card-heading {
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.profile-page .investment-heading-icon {
+    border-color: rgba(117, 108, 255, 0.25);
+    background: rgba(117, 108, 255, 0.12);
+    color: var(--profile-primary-light);
+}
+
+/* =========================================================
+   12. INVESTMENT SUMMARY
+   ========================================================= */
+
+.profile-page .investment-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.profile-page .investment-summary-item {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid #303a53;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #1a2338, #141c2e);
+}
+
+.profile-page .investment-summary-label {
+    display: block;
+    min-height: 30px;
+    margin-bottom: 9px;
+    color: var(--profile-muted);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.profile-page .investment-summary-item strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: var(--profile-text);
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 850;
+}
+
+.profile-page .investment-summary-item small {
+    display: block;
+    margin-top: 8px;
+    color: #8995ae;
+    font-size: 9px;
+    line-height: 1.5;
+}
+
+.profile-page #investmentRealizedPL.positive {
+    color: var(--profile-green);
+}
+
+.profile-page #investmentRealizedPL.negative {
+    color: var(--profile-red);
+}
+
+.profile-page #investmentRealizedPL.neutral {
+    color: var(--profile-text);
+}
+
+.profile-page .investment-section-divider {
+    height: 1px;
+    margin: 28px 0;
+    background: var(--profile-border);
+}
+
+/* =========================================================
+   13. INVESTMENT STAGE HEADINGS
+   ========================================================= */
+
+.profile-page .investment-stage {
+    min-width: 0;
+}
+
+.profile-page .investment-form-heading,
+.profile-page .investment-list-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.profile-page .investment-stage-label {
+    display: inline-block;
+    margin-bottom: 7px;
+    color: var(--profile-primary-light);
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 1.3px;
+}
+
+.profile-page .investment-form-heading h4,
+.profile-page .investment-list-heading h4 {
+    margin: 0;
+    color: var(--profile-text);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.profile-page .investment-form-heading p,
+.profile-page .investment-list-heading p {
+    margin: 6px 0 0;
+    color: var(--profile-muted);
+    font-size: 10px;
+    line-height: 1.8;
+}
+
+/* =========================================================
+   14. ADD INVESTMENT FORM
+   ========================================================= */
+
+.profile-page .investment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.profile-page .investment-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.profile-page .investment-field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-page .investment-field label,
+.profile-page .investment-field > span {
+    color: #cbd1e2;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.profile-page .investment-field input,
+.profile-page .investment-field select {
+    width: 100%;
+    min-width: 0;
+    min-height: 45px;
+    padding: 11px 13px;
+    border: 1px solid #303b53;
+    border-radius: 10px;
+    outline: none;
+    background: var(--profile-input);
+    color: var(--profile-text);
+    font-family: inherit;
+    font-size: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-page .investment-field input::placeholder {
+    color: #748099;
+}
+
+.profile-page .investment-field input:focus,
+.profile-page .investment-field select:focus {
+    border-color: var(--profile-primary);
+    box-shadow: 0 0 0 3px rgba(117, 108, 255, 0.13);
+}
+
+.profile-page .investment-field input[type="date"] {
+    color-scheme: dark;
+}
+
+.profile-page .investment-field input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.profile-page .investment-field-help {
+    color: var(--profile-muted);
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.profile-page .investment-form-hint {
+    padding: 13px 15px;
+    border: 1px solid #303a53;
+    border-radius: 10px;
+    background: #182236;
+}
+
+.profile-page .investment-form-hint strong {
+    color: #c9c5ff;
+    font-size: 10px;
+}
+
+.profile-page .investment-form-hint p {
+    margin: 6px 0 0;
+    color: var(--profile-muted);
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+.profile-page .investment-form-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 13px;
+}
+
+.profile-page #saveInvestmentButton {
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.profile-page .investment-form-status {
+    min-height: 18px;
+    color: var(--profile-muted);
+    font-size: 11px;
+}
+
+.profile-page .investment-form-status.success {
+    color: var(--profile-green);
+}
+
+.profile-page .investment-form-status.error {
+    color: var(--profile-red);
+}
+
+/* =========================================================
+   15. ASSET SEARCH
+   ========================================================= */
+
+.profile-page .investment-asset-search-field {
+    position: relative;
+    grid-column: 1 / -1;
+}
+
+.profile-page .investment-search-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.profile-page .investment-search-icon {
+    position: absolute;
+    left: 14px;
+    z-index: 1;
+    color: #929bb4;
+    font-size: 20px;
+    pointer-events: none;
+}
+
+.profile-page #investmentAssetSearch {
+    padding-right: 45px;
+    padding-left: 43px;
+}
+
+.profile-page .investment-search-clear {
+    position: absolute;
+    right: 10px;
+    display: grid;
+    width: 29px;
+    height: 29px;
+    place-items: center;
+    border: 1px solid #39445c;
+    border-radius: 8px;
+    background: #202a40;
+    color: #cbd1e2;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.profile-page .investment-search-clear:hover {
+    border-color: var(--profile-primary);
+    color: #fff;
+}
+
+/* ASSET SEARCH SUGGESTIONS */
+
+.profile-page .investment-asset-suggestions {
+    position: absolute;
+    z-index: 1200;
+    top: calc(100% + 7px);
+    right: 0;
+    left: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 6px;
+    border: 1px solid #39445f;
+    border-radius: 12px;
+    background: #182236;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.48);
+    scrollbar-width: thin;
+}
+
+.profile-page .investment-asset-suggestion {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 13px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--profile-text);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.profile-page .investment-asset-suggestion:hover,
+.profile-page .investment-asset-suggestion:focus-visible {
+    outline: none;
+    background: rgba(117, 108, 255, 0.15);
+}
+
+.profile-page .investment-asset-suggestion-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.profile-page .investment-asset-suggestion-name {
+    overflow: hidden;
+    color: var(--profile-text);
+    font-size: 12px;
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-page .investment-asset-suggestion-symbol {
+    color: var(--profile-muted);
+    font-family: Consolas, monospace;
+    font-size: 10px;
+}
+
+.profile-page .investment-asset-suggestion-exchange {
+    flex-shrink: 0;
+    color: var(--profile-primary-light);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.profile-page .investment-search-empty {
+    padding: 15px;
+    color: var(--profile-muted);
+    font-size: 11px;
+}
+
+/* SELECTED ASSET */
+
+.profile-page .investment-selected-asset {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 12px 14px;
+    border: 1px solid rgba(53, 214, 163, 0.25);
+    border-radius: 10px;
+    background: rgba(53, 214, 163, 0.07);
+}
+
+.profile-page .selected-asset-indicator {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(53, 214, 163, 0.15);
+    color: var(--profile-green);
+    font-size: 12px;
+}
+
+.profile-page #investmentSelectedAssetName {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--profile-text);
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.profile-page #investmentSelectedAssetSymbol {
+    margin-left: auto;
+    color: var(--profile-green);
+    font-family: Consolas, monospace;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   16. OPEN AND COMPLETED INVESTMENTS
+   ========================================================= */
+
+.profile-page .investment-list-section {
+    min-width: 0;
+}
+
+.profile-page .investment-refresh-button {
+    min-height: 36px;
+    padding: 0 13px;
+    border: 1px solid #39445c;
+    border-radius: 9px;
+    background: #202a40;
+    color: #d4d9e9;
+    font-size: 10px;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+.profile-page .investment-refresh-button:hover {
+    border-color: var(--profile-primary);
+    background: #29314c;
+}
+
+.profile-page .investment-list-message {
+    margin: 0 0 12px;
+    color: var(--profile-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.profile-page .investment-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #303a53;
+    border-radius: 12px;
+    background: #101827;
+    scrollbar-width: thin;
+}
+
+.profile-page .investment-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.profile-page .investment-table th {
+    padding: 14px;
+    border-bottom: 1px solid #39445c;
+    background: #1a2439;
+    color: #b8c1d6;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.profile-page .investment-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--profile-border);
+    color: #dce1ef;
+    font-size: 11px;
+    vertical-align: middle;
+}
+
+.profile-page .investment-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.profile-page .investment-table tbody tr:hover {
+    background: rgba(117, 108, 255, 0.045);
+}
+
+.profile-page .investment-table .investment-empty-cell {
+    padding: 28px 15px;
+    color: var(--profile-muted);
+    text-align: center;
+    line-height: 1.7;
+}
+
+.profile-page .investment-asset-cell {
+    display: flex;
+    min-width: 130px;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.profile-page .investment-asset-cell strong {
+    color: var(--profile-text);
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.profile-page .investment-asset-cell span {
+    color: #9ba6bf;
+    font-family: Consolas, monospace;
+    font-size: 10px;
+}
+
+.profile-page .investment-table .investment-profit {
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+.profile-page .investment-table .investment-profit.positive {
+    color: var(--profile-green);
+}
+
+.profile-page .investment-table .investment-profit.negative {
+    color: var(--profile-red);
+}
+
+.profile-page .investment-table .investment-profit.neutral {
+    color: var(--profile-text);
+}
+
+/* TABLE STATUS */
+
+.profile-page .investment-table .investment-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border: 1px solid #39445c;
+    border-radius: 999px;
+    background: #202a40;
+    color: #d0d7e8;
+    font-size: 9px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.profile-page .investment-table .investment-status.open {
+    border-color: rgba(117, 108, 255, 0.3);
+    background: rgba(117, 108, 255, 0.12);
+    color: #aaa4ff;
+}
+
+.profile-page .investment-table .investment-status.closed,
+.profile-page .investment-table .investment-status.completed {
+    border-color: rgba(53, 214, 163, 0.25);
+    background: rgba(53, 214, 163, 0.1);
+    color: var(--profile-green);
+}
+
+/* RECORD WITHDRAWAL BUTTON */
+
+.profile-page .investment-table .investment-action-button {
+    min-height: 33px;
+    padding: 0 12px;
+    border: 1px solid rgba(117, 108, 255, 0.4);
+    border-radius: 8px;
+    background: rgba(117, 108, 255, 0.13);
+    color: #b8b2ff;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.profile-page .investment-table .investment-action-button:hover {
+    border-color: var(--profile-primary);
+    background: rgba(117, 108, 255, 0.27);
+    color: #fff;
+}
+
+.profile-page .investment-disclaimer {
+    margin: 17px 0 0;
+    color: #929db5;
+    font-size: 10px;
+    line-height: 1.85;
+}
+
+/* =========================================================
+   17. WITHDRAWAL MODAL — MATCHES YOUR HTML EXACTLY
+   ========================================================= */
+
+/*
+   Important:
+   The HTML uses:
+   #withdrawalModal
+   .investment-modal
+   .investment-modal-backdrop
+   .investment-modal-content
+   .investment-modal-heading
+   .withdrawal-asset-summary
+   .withdrawal-form
+   .withdrawal-form-message
+   .investment-modal-actions
+*/
+
+/* Modal container */
+
+.profile-page .investment-modal {
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-y: auto;
+    isolation: isolate;
+}
+
+.profile-page .investment-modal[hidden] {
+    display: none !important;
+}
+
+/* Dark background overlay */
+
+.profile-page .investment-modal-backdrop {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    background: rgba(3, 6, 16, 0.82);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+}
+
+/* Actual withdrawal dialog */
+
+.profile-page .investment-modal-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    margin: auto;
+    padding: 28px;
+    border: 1px solid #414b69;
+    border-radius: 20px;
+    background: linear-gradient(155deg, #1c2740, #111827 65%);
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.65),
+        0 0 35px rgba(117, 108, 255, 0.1);
+    animation: withdrawal-dialog-enter 0.24s ease both;
+    scrollbar-width: thin;
+    scrollbar-color: #515b79 #182236;
+}
+
+@keyframes withdrawal-dialog-enter {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Modal heading */
+
+.profile-page .investment-modal-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.profile-page .investment-modal-heading h3 {
+    margin: 0 0 8px;
+    color: var(--profile-text);
+    font-size: 21px;
+    font-weight: 850;
+    letter-spacing: -0.4px;
+}
+
+.profile-page .investment-modal-heading p {
+    max-width: 350px;
+    margin: 0;
+    color: var(--profile-muted);
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+/* Close button */
+
+.profile-page .investment-modal-close {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    place-items: center;
+    border: 1px solid #414b66;
+    border-radius: 10px;
+    background: #222d45;
+    color: #dce1ef;
+    font-size: 21px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.profile-page .investment-modal-close:hover {
+    border-color: var(--profile-primary);
+    background: #303758;
+    color: #fff;
+}
+
+/* Selected asset details */
+
+.profile-page .withdrawal-asset-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 22px;
+    padding: 15px 16px;
+    border: 1px solid rgba(117, 108, 255, 0.28);
+    border-radius: 12px;
+    background:
+        linear-gradient(
+            110deg,
+            rgba(117, 108, 255, 0.13),
+            rgba(117, 108, 255, 0.035)
+        ),
+        #192236;
+}
+
+.profile-page .withdrawal-asset-summary strong {
+    overflow-wrap: anywhere;
+    color: var(--profile-text);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.profile-page .withdrawal-asset-summary span {
+    color: var(--profile-primary-light);
+    font-family: Consolas, monospace;
+    font-size: 10px;
+    font-weight: 750;
+}
+
+/* Withdrawal form */
+
+.profile-page .withdrawal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.profile-page .withdrawal-form .investment-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.profile-page .withdrawal-form .investment-field > span {
+    color: #d0d6e8;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.profile-page .withdrawal-form .investment-field input {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid #39445e;
+    border-radius: 11px;
+    outline: none;
+    background: #0d1525;
+    color: var(--profile-text);
+    font-family: inherit;
+    font-size: 13px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-page .withdrawal-form .investment-field input::placeholder {
+    color: #78849e;
+}
+
+.profile-page .withdrawal-form .investment-field input:focus {
+    border-color: var(--profile-primary);
+    box-shadow: 0 0 0 3px rgba(117, 108, 255, 0.16);
+}
+
+.profile-page .withdrawal-form input[type="date"] {
+    color-scheme: dark;
+}
+
+/* Validation and status message */
+
+.profile-page .withdrawal-form-message {
+    padding: 11px 13px;
+    border: 1px solid var(--profile-border);
+    border-radius: 9px;
+    background: #192236;
+    color: var(--profile-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.profile-page .withdrawal-form-message.error {
+    border-color: rgba(255, 120, 133, 0.3);
+    background: rgba(255, 120, 133, 0.08);
+    color: var(--profile-red);
+}
+
+.profile-page .withdrawal-form-message.success {
+    border-color: rgba(53, 214, 163, 0.3);
+    background: rgba(53, 214, 163, 0.08);
+    color: var(--profile-green);
+}
+
+/* Modal action buttons */
+
+.profile-page .investment-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 11px;
+    margin-top: 7px;
+    padding-top: 18px;
+    border-top: 1px solid var(--profile-border);
+}
+
+.profile-page .investment-modal-actions .button {
+    min-height: 43px;
+    padding: 0 17px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.profile-page #confirmWithdrawalButton {
+    min-width: 175px;
+    border: 1px solid rgba(164, 158, 255, 0.4);
+    background: linear-gradient(110deg, #756cff, #496fe8);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+}
+
+.profile-page #confirmWithdrawalButton:hover {
+    box-shadow: 0 8px 23px rgba(79, 70, 229, 0.32);
+}
+
+.profile-page #cancelWithdrawalButton {
+    border: 1px solid #414b66;
+    background: #222d45;
+    color: #d0d6e8;
+}
+
+.profile-page #cancelWithdrawalButton:hover {
+    border-color: var(--profile-primary);
+    color: #fff;
+}
+
+/* =========================================================
+   18. ERROR STATE
+   ========================================================= */
+
+.profile-page .profile-error-state {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 280px;
+    padding: 35px 24px;
+    border: 1px solid var(--profile-border);
+    border-radius: var(--profile-radius);
+    background: var(--profile-card);
+    text-align: center;
+}
+
+.profile-page .profile-error-icon {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 17px;
+    place-items: center;
+    border: 1px solid rgba(255, 198, 107, 0.25);
+    border-radius: 15px;
+    background: rgba(255, 198, 107, 0.1);
+    color: var(--profile-yellow);
+    font-size: 24px;
+    font-weight: 850;
+}
+
+.profile-page .profile-error-state h3 {
+    margin: 0 0 10px;
+    color: var(--profile-text);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.profile-page .profile-error-state p {
+    max-width: 470px;
+    margin: 0 0 22px;
+    color: var(--profile-muted);
+    font-size: 11px;
+    line-height: 1.9;
+}
+
+/* =========================================================
+   19. DISCLAIMER
+   ========================================================= */
+
+.profile-page .profile-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 25px;
+    padding: 17px 19px;
+    border: 1px solid var(--profile-border);
+    border-radius: 13px;
+    background: var(--profile-card);
+}
+
+.profile-page .profile-disclaimer > span {
+    flex-shrink: 0;
+    color: var(--profile-primary-light);
+    font-size: 17px;
+}
+
+.profile-page .profile-disclaimer p {
+    margin: 0;
+    color: var(--profile-muted);
+    font-size: 10px;
+    line-height: 1.9;
+}
+
+.profile-page .profile-disclaimer strong {
+    color: #e2e6f3;
+}
+
+/* =========================================================
+   20. ACCESSIBILITY
+   ========================================================= */
+
+.profile-page button:focus-visible,
+.profile-page a:focus-visible,
+.profile-page input:focus-visible,
+.profile-page select:focus-visible {
+    outline: 3px solid rgba(129, 122, 255, 0.65);
+    outline-offset: 3px;
+}
+
+.profile-page button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* =========================================================
+   21. TABLET RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .profile-page .app-content {
+        padding: 25px 23px 32px;
+    }
+
+    .profile-page .profile-card {
+        padding: 24px;
+    }
+
+    .profile-page .investment-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   22. SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 760px) {
+    .profile-page .app-content {
+        padding: 21px 16px 28px;
+    }
+
+    .profile-page .app-topbar {
+        min-height: 74px;
+    }
+
+    .profile-page .topbar-heading h1 {
+        font-size: 19px;
+    }
+
+    .profile-page .topbar-user-copy {
+        display: none;
+    }
+
+    .profile-page .topbar-avatar {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .profile-page .profile-intro {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .profile-page .profile-card {
+        padding: 21px;
+    }
+
+    .profile-page .profile-edit-fields {
+        gap: 14px;
+    }
+
+    .profile-page .investment-summary-grid {
+        gap: 11px;
+    }
+
+    .profile-page .investment-form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   23. MOBILE
+   ========================================================= */
+
+@media (max-width: 560px) {
+    .profile-page .app-content {
+        padding: 18px 12px 24px;
+    }
+
+    .profile-page .topbar-heading h1 {
+        font-size: 17px;
+    }
+
+    .profile-page .topbar-heading .eyebrow {
+        font-size: 8px;
+    }
+
+    .profile-page .topbar-right {
+        gap: 8px;
+    }
+
+    .profile-page .logout-button {
+        min-height: 35px;
+        padding: 0 9px;
+        font-size: 10px;
+    }
+
+    .profile-page .profile-intro h2 {
+        font-size: 25px;
+    }
+
+    .profile-page .profile-intro p {
+        font-size: 11px;
+    }
+
+    .profile-page .profile-card {
+        padding: 16px;
+        border-radius: 15px;
+    }
+
+    .profile-page .profile-card-heading {
+        gap: 10px;
+    }
+
+    .profile-page .profile-card-heading h3 {
+        font-size: 14px;
+    }
+
+    .profile-page .profile-heading-icon {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .profile-page .profile-identity {
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .profile-page .profile-large-avatar {
+        width: 49px;
+        height: 49px;
+        flex-basis: 49px;
+        border-radius: 14px;
+        font-size: 19px;
+    }
+
+    .profile-page .profile-identity-copy h2 {
+        font-size: 16px;
+    }
+
+    .profile-page .profile-detail-row {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        gap: 9px;
+        padding: 13px 0;
+    }
+
+    .profile-page .profile-detail-row dt {
+        font-size: 10px;
+    }
+
+    .profile-page .profile-detail-row dd {
+        font-size: 10px;
+    }
+
+    .profile-page .profile-edit-fields {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 13px;
+    }
+
+    .profile-page .profile-edit-user-id {
+        grid-column: auto;
+        max-width: 100%;
+    }
+
+    .profile-page .profile-edit-actions {
+        justify-content: stretch;
+    }
+
+    .profile-page .profile-edit-actions .button {
+        width: 100%;
+    }
+
+    .profile-page .profile-edit-form-actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .profile-page .profile-edit-form-actions .button {
+        width: 100%;
+    }
+
+    .profile-page .investment-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .profile-page .investment-summary-item {
+        padding: 13px;
+    }
+
+    .profile-page .investment-summary-item strong {
+        font-size: 18px;
+    }
+
+    .profile-page .investment-summary-label {
+        min-height: 28px;
+        font-size: 9px;
+    }
+
+    .profile-page .investment-form-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 13px;
+    }
+
+    .profile-page .investment-asset-search-field {
+        grid-column: auto;
+    }
+
+    .profile-page .investment-form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .profile-page #saveInvestmentButton {
+        width: 100%;
+    }
+
+    .profile-page .investment-list-heading {
+        align-items: flex-start;
+    }
+
+    .profile-page .investment-refresh-button {
+        flex-shrink: 0;
+    }
+
+    .profile-page .investment-disclaimer {
+        font-size: 9px;
+    }
+
+    .profile-page .profile-disclaimer {
+        padding: 14px;
+    }
+
+    .profile-page .profile-disclaimer p {
+        font-size: 9px;
+    }
+
+    /* WITHDRAWAL MODAL ON MOBILE */
+
+    .profile-page .investment-modal {
+        align-items: center;
+        padding: 14px;
+    }
+
+    .profile-page .investment-modal-content {
+        width: 100%;
+        max-width: 100%;
+        max-height: calc(100dvh - 28px);
+        padding: 21px 17px;
+        border-radius: 16px;
+    }
+
+    .profile-page .investment-modal-heading {
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .profile-page .investment-modal-heading h3 {
+        font-size: 18px;
+    }
+
+    .profile-page .investment-modal-heading p {
+        font-size: 10px;
+    }
+
+    .profile-page .investment-modal-close {
+        width: 32px;
+        height: 32px;
+        flex-basis: 32px;
+    }
+
+    .profile-page .withdrawal-asset-summary {
+        margin-bottom: 18px;
+        padding: 13px;
+    }
+
+    .profile-page .withdrawal-form {
+        gap: 14px;
+    }
+
+    .profile-page .withdrawal-form .investment-field input {
+        min-height: 46px;
+    }
+
+    .profile-page .investment-modal-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 9px;
+    }
+
+    .profile-page .investment-modal-actions .button {
+        width: 100%;
+    }
+
+    .profile-page #confirmWithdrawalButton {
+        min-width: 0;
+    }
+}
+
+/* =========================================================
+   24. VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 360px) {
+    .profile-page .investment-summary-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .profile-page .profile-status-badge {
+        font-size: 9px;
+    }
+
+    .profile-page .investment-modal-content {
+        padding: 17px 13px;
+    }
+}
+
+/* =========================================================
+   25. REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .profile-page *,
+    .profile-page *::before,
+    .profile-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* =========================================================
+   MARKET PLUS AI — WHAT-IF MARKET BUTTON
+========================================================= */
+
+.what-if-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    min-height: 46px;
+    padding: 0 22px;
+
+    border: 1px solid rgba(139, 92, 246, 0.55);
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #7c3aed 0%,
+        #6366f1 55%,
+        #4f46e5 100%
+    );
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+
+    box-shadow:
+        0 5px 18px rgba(99, 102, 241, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.what-if-button:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(
+        135deg,
+        #8b5cf6 0%,
+        #6366f1 55%,
+        #4f46e5 100%
+    );
+
+    border-color: rgba(167, 139, 250, 0.9);
+
+    box-shadow:
+        0 9px 25px rgba(99, 102, 241, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.what-if-button:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.2);
+}
+
+.what-if-button:focus-visible {
+    outline: 3px solid rgba(167, 139, 250, 0.65);
+    outline-offset: 4px;
+}
+
+.what-if-button .what-if-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 25px;
+    height: 25px;
+
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.16);
+
+    font-size: 16px;
+    line-height: 1;
+}
+
+.what-if-button .what-if-arrow {
+    font-size: 17px;
+    transition: transform 0.2s ease;
+}
+
+.what-if-button:hover .what-if-arrow {
+    transform: translateX(4px);
+}
+
+.what-if-button[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    .what-if-button {
+        width: 100%;
+        min-height: 44px;
+        padding: 0 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .what-if-button,
+    .what-if-button .what-if-arrow {
+        transition: none;
+    }
+}

@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+
+    <title>Notifications | Market Plus AI</title>
+
+    <meta name="description"
+          content="View price alert notifications and application updates from Market Plus AI.">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/common.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/notifications.css') }}">
+</head>
+
+<body>
+
+<main class="notifications-page">
+
+    <!-- TOP NAVIGATION -->
+    <header class="notifications-topbar">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="notifications-brand"
+           aria-label="Market Plus AI Dashboard">
+
+            <span class="notifications-brand-icon">M+</span>
+
+            <span class="notifications-brand-text">
+                <strong>Market Plus AI</strong>
+                <small>Intelligent Market Insights</small>
+            </span>
+
+        </a>
+
+        <div class="notifications-topbar-actions">
+
+            <span class="notifications-live-label">
+                <span class="live-indicator"></span>
+                Notification Center
+            </span>
+
+            <a href="{{ url_for('dashboard') }}"
+               class="back-dashboard-button">
+
+                <span aria-hidden="true">←</span>
+                <span>Back to Dashboard</span>
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- PAGE INTRODUCTION -->
+    <section class="notifications-hero">
+
+        <div class="notifications-hero-content">
+
+            <div class="notifications-eyebrow">
+                <span class="notifications-eyebrow-icon">✦</span>
+                YOUR ACTIVITY CENTER
+            </div>
+
+            <h1>Notifications & Updates</h1>
+
+            <p>
+                Stay informed about triggered price alerts,
+                email delivery and important application updates.
+            </p>
+
+        </div>
+
+        <div class="notifications-hero-decoration" aria-hidden="true">
+            <div class="hero-decoration-circle circle-one"></div>
+            <div class="hero-decoration-circle circle-two"></div>
+            <div class="hero-decoration-icon">♧</div>
+        </div>
+
+    </section>
+
+
+    <!-- SUMMARY CARDS -->
+    <section class="notification-summary-grid"
+             aria-label="Notification summary">
+
+        <article class="notification-summary-card">
+
+            <div class="notification-summary-icon total">
+                <span aria-hidden="true">▤</span>
+            </div>
+
+            <div class="notification-summary-content">
+                <span>Total Notifications</span>
+                <strong id="totalNotificationsCount">0</strong>
+                <small>Notifications available</small>
+            </div>
+
+        </article>
+
+
+        <article class="notification-summary-card">
+
+            <div class="notification-summary-icon unread">
+                <span aria-hidden="true">●</span>
+            </div>
+
+            <div class="notification-summary-content">
+                <span>Unread Notifications</span>
+                <strong id="unreadNotificationsCount">0</strong>
+                <small>Awaiting your attention</small>
+            </div>
+
+        </article>
+
+
+        <article class="notification-summary-card">
+
+            <div class="notification-summary-icon email">
+                <span aria-hidden="true">✉</span>
+            </div>
+
+            <div class="notification-summary-content">
+                <span>Email Notifications</span>
+                <strong id="emailNotificationsCount">0</strong>
+                <small>Email status available</small>
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- DELIVERY INFORMATION -->
+    <section class="notification-delivery-info">
+
+        <div class="notification-delivery-info-icon">
+            <span aria-hidden="true">ⓘ</span>
+        </div>
+
+        <div class="notification-delivery-info-content">
+
+            <strong>About notification delivery</strong>
+
+            <p>
+                Email marked as accepted means the SMTP server accepted
+                the message; it does not guarantee inbox delivery.
+                SMS delivery will remain unconfigured until an SMS
+                provider is integrated.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- MAIN NOTIFICATION PANEL -->
+    <section class="notifications-panel">
+
+        <!-- PANEL HEADER -->
+        <div class="notifications-panel-header">
+
+            <div>
+                <div class="notifications-section-eyebrow">
+                    ACTIVITY
+                </div>
+
+                <h2>Your Notifications</h2>
+
+                <p>
+                    Review your alerts and notification history.
+                </p>
+            </div>
+
+            <div class="notifications-heading-actions">
+
+                <button type="button"
+                        id="refreshNotificationsButton"
+                        class="notifications-action-button refresh-button">
+
+                    <span aria-hidden="true">↻</span>
+                    Refresh
+
+                </button>
+
+                <button type="button"
+                        id="markAllReadButton"
+                        class="notifications-action-button primary">
+
+                    <span aria-hidden="true">✓</span>
+                    Mark all as read
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- FILTERS -->
+        <div class="notifications-toolbar">
+
+            <div class="notifications-filters"
+                 role="group"
+                 aria-label="Filter notifications">
+
+                <button type="button"
+                        class="notification-filter-button active"
+                        data-filter="all"
+                        aria-pressed="true">
+                    All
+                </button>
+
+                <button type="button"
+                        class="notification-filter-button"
+                        data-filter="unread"
+                        aria-pressed="false">
+                    Unread
+                </button>
+
+                <button type="button"
+                        class="notification-filter-button"
+                        data-filter="price_alert"
+                        aria-pressed="false">
+                    Price Alerts
+                </button>
+
+                <button type="button"
+                        class="notification-filter-button"
+                        data-filter="updates"
+                        aria-pressed="false">
+                    Updates
+                </button>
+
+            </div>
+
+            <span class="notifications-toolbar-label">
+                <span class="toolbar-dot"></span>
+                Synced with your account
+            </span>
+
+        </div>
+
+
+        <!-- STATUS MESSAGE -->
+        <div id="notificationsStatus"
+             class="notifications-status"
+             role="status"
+             aria-live="polite">
+        </div>
+
+
+        <!-- LOADING -->
+        <div id="notificationsLoading"
+             class="notifications-loading">
+
+            <div class="notifications-loading-spinner"></div>
+
+            <strong>Loading notifications</strong>
+
+            <p>Please wait while we retrieve your activity.</p>
+
+        </div>
+
+
+        <!-- EMPTY STATE -->
+        <div id="notificationsEmpty"
+             class="notifications-empty">
+
+            <div class="notifications-empty-icon">
+                <span aria-hidden="true">♧</span>
+            </div>
+
+            <h3 id="notificationsEmptyTitle">
+                No notifications yet
+            </h3>
+
+            <p id="notificationsEmptyMessage">
+                Your notifications will appear here when available.
+            </p>
+
+            <a href="{{ url_for('dashboard') }}"
+               class="empty-back-button">
+                Return to Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- NOTIFICATIONS LIST -->
+        <div id="notificationsList"
+             class="notifications-list"
+             aria-live="polite">
+        </div>
+
+
+        <!-- PAGINATION -->
+        <div id="notificationsPagination"
+             class="notifications-pagination">
+
+            <span id="notificationsPageInfo"
+                  class="notifications-page-info">
+                Page 1
+            </span>
+
+            <div class="notifications-pagination-actions">
+
+                <button type="button"
+                        id="previousNotificationsButton"
+                        disabled>
+                    ← Previous
+                </button>
+
+                <button type="button"
+                        id="nextNotificationsButton"
+                        disabled>
+                    Next →
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="notifications-footer">
+
+        <div class="notifications-footer-brand">
+            <span class="footer-brand-icon">M+</span>
+            <strong>Market Plus AI</strong>
+        </div>
+
+        <p>
+            AI-powered market insights. Informational purposes only;
+            predictions are not guaranteed financial outcomes.
+        </p>
+
+        <a href="{{ url_for('dashboard') }}">
+            Back to Dashboard
+        </a>
+
+    </footer>
+
+</main>
+
+
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+
+
+
+    {% include "partials/assistant_widget.html" %}
+
+</body>
+</html>

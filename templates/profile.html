@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#10172a">
+    <meta
+        name="description"
+        content="Manage your Market Plus AI account, review performance and track actual investments."
+    >
+
+    <title>My Profile | Market Plus AI</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/common.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/profile.css') }}"
+    >
+
+    <script
+        src="{{ url_for('static', filename='js/common.js') }}"
+        defer
+    ></script>
+
+    <script
+        src="{{ url_for('static', filename='js/profile.js') }}"
+        defer
+    ></script>
+</head>
+
+<body class="app-body profile-page">
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside
+        class="app-sidebar"
+        id="appSidebar"
+        aria-label="Main navigation"
+    >
+
+        <a
+            class="sidebar-brand"
+            href="{{ url_for('dashboard') }}"
+            aria-label="Market Plus AI Dashboard"
+        >
+            <span class="brand-mark" aria-hidden="true">M+</span>
+
+            <span class="brand-copy">
+                <strong>Market Plus</strong>
+                <small>AI Intelligence</small>
+            </span>
+        </a>
+
+        <div class="sidebar-section-label">
+            WORKSPACE
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Workspace">
+
+            <a class="sidebar-link" href="{{ url_for('dashboard') }}">
+                <span class="sidebar-icon" aria-hidden="true">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('stock_search') }}">
+                <span class="sidebar-icon" aria-hidden="true">⌕</span>
+                <span>Explore Assets</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('predictions') }}">
+                <span class="sidebar-icon" aria-hidden="true">↗</span>
+                <span>AI Predictions</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('prediction_history') }}">
+                <span class="sidebar-icon" aria-hidden="true">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('news_sentiment') }}">
+                <span class="sidebar-icon" aria-hidden="true">▤</span>
+                <span>News &amp; Sentiment</span>
+            </a>
+
+            
+<a class="sidebar-link" href="{{ url_for('what_if_market') }}">
+                <span class="nav-icon">◉</span>
+                <span>What-If Market</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('alerts') }}">
+                <span class="sidebar-icon" aria-hidden="true">♧</span>
+                <span>Price Alerts</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-section-label">
+            ACCOUNT
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Account">
+
+            <a
+                class="sidebar-link active"
+                href="{{ url_for('profile') }}"
+                aria-current="page"
+            >
+                <span class="sidebar-icon" aria-hidden="true">◉</span>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-help-card">
+
+                <span class="help-card-icon" aria-hidden="true">✦</span>
+
+                <strong>Your AI, your decisions</strong>
+
+                <p>
+                    Use predictions as information, not guaranteed outcomes.
+                </p>
+
+            </div>
+
+            <div class="sidebar-version">
+                Market Plus AI · v1.0.0
+            </div>
+
+        </div>
+
+    </aside>
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        aria-hidden="true"
+    ></div>
+
+
+    <!-- MAIN APPLICATION -->
+    <main class="app-main">
+
+        <!-- TOPBAR -->
+        <header class="app-topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-controls="appSidebar"
+                    aria-expanded="false"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <div class="topbar-heading">
+
+                    <span class="eyebrow">
+                        ACCOUNT SETTINGS
+                    </span>
+
+                    <h1>My Profile</h1>
+
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="topbar-user">
+
+                    <div
+                        class="topbar-avatar"
+                        id="topbarAvatar"
+                        aria-hidden="true"
+                    >
+                        U
+                    </div>
+
+                    <div class="topbar-user-copy">
+
+                        <span class="topbar-user-label">
+                            Signed in as
+                        </span>
+
+                        <strong id="topbarUserName">
+                            Loading...
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <button
+                    class="button button-outline logout-button"
+                    id="logoutButton"
+                    type="button"
+                >
+                    Log out
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- PROFILE CONTENT -->
+        <div class="app-content profile-content">
+
+            <section class="profile-intro">
+
+                <div>
+
+                    <span class="eyebrow">
+                        YOUR ACCOUNT
+                    </span>
+
+                    <h2>Account overview</h2>
+
+                    <p>
+                        Review your registered information, prediction
+                        performance and manually recorded investments.
+                    </p>
+
+                </div>
+
+                <div
+                    class="profile-status-badge"
+                    id="profileStatusBadge"
+                >
+                    <span class="status-dot" aria-hidden="true"></span>
+                    Account overview
+                </div>
+
+            </section>
+
+
+            <!-- GENERAL FEEDBACK -->
+            <div
+                class="profile-message"
+                id="profileMessage"
+                role="status"
+                aria-live="polite"
+                hidden
+            ></div>
+
+
+            <!-- LOADING -->
+            <section
+                class="profile-loading"
+                id="profileLoading"
+                aria-live="polite"
+            >
+
+                <span
+                    class="profile-loading-spinner"
+                    aria-hidden="true"
+                ></span>
+
+                <span>
+                    Loading your account information...
+                </span>
+
+            </section>
+
+
+            <!-- PROFILE GRID -->
+            <div
+                class="profile-grid"
+                id="profileGrid"
+                hidden
+            >
+
+                <!-- PERSONAL INFORMATION -->
+                <section
+                    class="profile-card account-information-card"
+                    aria-labelledby="personalInformationHeading"
+                >
+
+                    <div class="profile-card-heading">
+
+                        <div
+                            class="profile-heading-icon"
+                            aria-hidden="true"
+                        >
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <h3 id="personalInformationHeading">
+                                Personal information
+                            </h3>
+
+                            <p>
+                                Your registered account details
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-identity">
+
+                        <div
+                            class="profile-large-avatar"
+                            id="profileLargeAvatar"
+                            aria-hidden="true"
+                        >
+                            U
+                        </div>
+
+                        <div class="profile-identity-copy">
+
+                            <h2 id="profileFullName">
+                                User
+                            </h2>
+
+                            <p id="profileEmail">
+                                Email not available
+                            </p>
+
+                            <span
+                                class="profile-user-id"
+                                id="profileUserId"
+                            >
+                                User ID: Loading...
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-divider"></div>
+
+
+                    <!-- REGISTERED ACCOUNT DETAILS -->
+                    <dl class="profile-details-list">
+
+                        <div class="profile-detail-row">
+                            <dt>Generated User ID</dt>
+                            <dd id="detailUserId">—</dd>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <dt>Full name</dt>
+                            <dd id="detailFullName">—</dd>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <dt>Email address</dt>
+                            <dd id="detailEmail">—</dd>
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <dt>Phone number</dt>
+                            <dd id="detailPhone">—</dd>
+                        </div>
+
+                        <!-- NEW: COUNTRY FROM SIGNUP -->
+                        <div class="profile-detail-row">
+                            <dt>Country</dt>
+                            <dd id="detailCountry">—</dd>
+                        </div>
+
+                        <!-- NEW: LANGUAGE FROM SIGNUP -->
+                        <div class="profile-detail-row">
+                            <dt>Preferred language</dt>
+                            <dd id="detailLanguage">—</dd>
+                        </div>
+
+                        <!-- NEW: CURRENCY FROM SIGNUP -->
+                        <div class="profile-detail-row">
+                            <dt>Preferred currency</dt>
+                            <dd id="detailPreferredCurrency">—</dd>
+                        </div>
+
+                        <div class="profile-detail-row">
+
+                            <dt>Risk category</dt>
+
+                            <dd>
+                                <span
+                                    class="risk-category-badge"
+                                    id="detailRiskCategory"
+                                >
+                                    Not available
+                                </span>
+                            </dd>
+
+                        </div>
+
+                        <div class="profile-detail-row">
+                            <dt>Account created</dt>
+                            <dd id="detailCreatedAt">Not available</dd>
+                        </div>
+
+                    </dl>
+
+
+                    <!-- EDIT PROFILE BUTTON -->
+                    <div class="profile-edit-actions">
+
+                        <button
+                            class="button button-primary"
+                            id="editProfileButton"
+                            type="button"
+                        >
+                            Edit profile
+                        </button>
+
+                    </div>
+
+
+                    <!-- EDIT PROFILE FORM -->
+                    <form
+                        id="editProfileForm"
+                        class="profile-edit-form"
+                        hidden
+                        novalidate
+                    >
+
+                        <div class="profile-divider"></div>
+
+                        <div class="profile-card-heading">
+
+                            <div
+                                class="profile-heading-icon"
+                                aria-hidden="true"
+                            >
+                                ✎
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Edit personal information
+                                </h3>
+
+                                <p>
+                                    Update your registered account details.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="profile-edit-fields">
+
+                            <!-- EDIT NAME -->
+                            <label class="profile-edit-field">
+
+                                <span>Full name</span>
+
+                                <input
+                                    type="text"
+                                    id="editProfileName"
+                                    name="name"
+                                    maxlength="100"
+                                    autocomplete="name"
+                                    placeholder="Enter your full name"
+                                    required
+                                >
+
+                            </label>
+
+
+                            <!-- EDIT EMAIL -->
+                            <label class="profile-edit-field">
+
+                                <span>Email address</span>
+
+                                <input
+                                    type="email"
+                                    id="editProfileEmail"
+                                    name="email"
+                                    maxlength="254"
+                                    autocomplete="email"
+                                    placeholder="Enter your email address"
+                                    required
+                                >
+
+                            </label>
+                            
+<!-- EDIT COUNTRY -->
+<label class="profile-edit-field">
+    <span>Country</span>
+    <select id="editProfileCountry" name="country" required>
+        <option value="">Select country</option>
+        <option value="India">India</option>
+        <option value="United States">United States</option>
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="Canada">Canada</option>
+        <option value="Australia">Australia</option>
+        <option value="Germany">Germany</option>
+        <option value="France">France</option>
+        <option value="Japan">Japan</option>
+        <option value="Singapore">Singapore</option>
+        <option value="United Arab Emirates">United Arab Emirates</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="Bangladesh">Bangladesh</option>
+        <option value="Nepal">Nepal</option>
+        <option value="Sri Lanka">Sri Lanka</option>
+        <option value="South Africa">South Africa</option>
+        <option value="Brazil">Brazil</option>
+        <option value="Mexico">Mexico</option>
+        <option value="New Zealand">New Zealand</option>
+    </select>
+</label>
+
+<!-- EDIT PREFERRED LANGUAGE -->
+<label class="profile-edit-field">
+    <span>Preferred language</span>
+    <select id="editProfileLanguage" name="language" required>
+        <option value="en">English</option>
+        <option value="hi">Hindi</option>
+        <option value="kn">Kannada</option>
+        <option value="ta">Tamil</option>
+        <option value="te">Telugu</option>
+        <option value="ml">Malayalam</option>
+        <option value="bn">Bengali</option>
+        <option value="mr">Marathi</option>
+        <option value="gu">Gujarati</option>
+        <option value="pa">Punjabi</option>
+        <option value="ur">Urdu</option>
+        <option value="or">Odia</option>
+        <option value="as">Assamese</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="ja">Japanese</option>
+        <option value="zh">Chinese</option>
+        <option value="ar">Arabic</option>
+    </select>
+</label>
+
+<!-- EDIT PREFERRED CURRENCY -->
+<label class="profile-edit-field">
+    <span>Preferred currency</span>
+    <input
+        type="text"
+        id="editProfileCurrencySearch"
+        list="profileCurrencyOptions"
+        placeholder="Search currency (INR, USD, EUR)"
+        autocomplete="off"
+        required
+    >
+
+    <datalist id="profileCurrencyOptions">
+        <option value="INR — Indian Rupee (₹)"></option>
+        <option value="USD — US Dollar ($)"></option>
+        <option value="GBP — British Pound (£)"></option>
+        <option value="EUR — Euro (€)"></option>
+        <option value="CAD — Canadian Dollar (C$)"></option>
+        <option value="AUD — Australian Dollar (A$)"></option>
+        <option value="JPY — Japanese Yen (¥)"></option>
+        <option value="AED — UAE Dirham (د.إ)"></option>
+        <option value="SGD — Singapore Dollar (S$)"></option>
+        <option value="CHF — Swiss Franc (CHF)"></option>
+        <option value="CNY — Chinese Yuan (¥)"></option>
+        <option value="NZD — New Zealand Dollar (NZ$)"></option>
+        <option value="SAR — Saudi Riyal (ر.س)"></option>
+        <option value="BDT — Bangladeshi Taka (৳)"></option>
+        <option value="PKR — Pakistani Rupee (₨)"></option>
+        <option value="NPR — Nepalese Rupee (रु)"></option>
+        <option value="LKR — Sri Lankan Rupee (Rs)"></option>
+        <option value="ZAR — South African Rand (R)"></option>
+    </datalist>
+
+    <input
+        type="hidden"
+        id="editProfileCurrency"
+        name="preferred_currency"
+    >
+</label>
+
+
+                            <!-- EDIT PHONE -->
+                            <label class="profile-edit-field">
+
+                                <span>Phone number</span>
+
+                                <input
+                                    type="tel"
+                                    id="editProfilePhone"
+                                    name="phone"
+                                    maxlength="20"
+                                    autocomplete="tel"
+                                    placeholder="Enter your phone number"
+                                    required
+                                >
+
+                            </label>
+
+                            
+                            <!-- EDIT RISK CATEGORY -->
+                            <label class="profile-edit-field">
+
+                                <span>Risk category</span>
+
+                                <select
+                                    id="editProfileRiskCategory"
+                                    name="risk_category"
+                                    required
+                                >
+                                    <option value="">
+                                        Select risk category
+                                    </option>
+
+                                    <option value="low">
+                                        Low
+                                    </option>
+
+                                    <option value="medium">
+                                        Medium
+                                    </option>
+
+                                    <option value="high">
+                                        High
+                                    </option>
+
+                                </select>
+
+                            </label>
+
+
+                            <!-- GENERATED USER ID: READ ONLY -->
+                            <label class="profile-edit-field profile-edit-user-id">
+
+                                <span>Generated User ID</span>
+
+                                <input
+                                    type="text"
+                                    id="editProfileUserId"
+                                    name="user_id"
+                                    readonly
+                                    aria-describedby="editProfileUserIdHelp"
+                                >
+
+                                <small id="editProfileUserIdHelp">
+                                    Your generated User ID cannot be changed.
+                                </small>
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- EDIT FORM MESSAGE -->
+                        <div
+                            class="profile-edit-message"
+                            id="editProfileMessage"
+                            role="status"
+                            aria-live="polite"
+                            hidden
+                        ></div>
+
+
+                        <!-- EDIT FORM ACTIONS -->
+                        <div class="profile-edit-form-actions">
+
+                            <button
+                                class="button button-outline"
+                                id="cancelProfileEditButton"
+                                type="button"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                class="button button-primary"
+                                id="saveProfileButton"
+                                type="submit"
+                            >
+                                Save changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                    <div class="profile-information-note">
+
+                        <span aria-hidden="true">ⓘ</span>
+
+                        <p>
+                            Your information is displayed from the account
+                            data returned by the application. You can edit
+                            your name, email, phone number and risk category.
+                            Your generated User ID remains unchanged.
+                            Your country, preferred language and preferred
+                            currency are displayed from your signup details.
+                        </p>
+
+                    </div>
+
+                 
+
+                </section>
+
+
+                <!-- INVESTMENT TRACKER -->
+                <section
+                    class="profile-card investment-tracker-card"
+                    id="investmentTracker"
+                    aria-labelledby="investmentTrackerHeading"
+                >
+
+                    <div class="profile-card-heading investment-card-heading">
+
+                        <div
+                            class="profile-heading-icon investment-heading-icon"
+                            aria-hidden="true"
+                        >
+                            ₹
+                        </div>
+
+                        <div>
+
+                            <h3 id="investmentTrackerHeading">
+                                Investment tracker
+                            </h3>
+
+                            <p>
+                                Track your actual purchases, withdrawals
+                                and realized investment performance.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INVESTMENT SUMMARY -->
+                    <div
+                        class="investment-summary-grid"
+                        aria-live="polite"
+                    >
+
+                        <article class="investment-summary-item">
+
+                            <span class="investment-summary-label">
+                                Realized profit / loss
+                            </span>
+
+                            <strong id="investmentRealizedPL">
+                                ₹0.00
+                            </strong>
+
+                            <small>
+                                Completed investments only
+                            </small>
+
+                        </article>
+
+
+                        <article class="investment-summary-item">
+
+                            <span class="investment-summary-label">
+                                Open investments
+                            </span>
+
+                            <strong id="investmentOpenCount">
+                                0
+                            </strong>
+
+                            <small>
+                                Awaiting withdrawal
+                            </small>
+
+                        </article>
+
+
+                        <article class="investment-summary-item">
+
+                            <span class="investment-summary-label">
+                                Completed investments
+                            </span>
+
+                            <strong id="investmentCompletedCount">
+                                0
+                            </strong>
+
+                            <small>
+                                Recorded withdrawals
+                            </small>
+
+                        </article>
+
+
+                        <article class="investment-summary-item">
+
+                            <span class="investment-summary-label">
+                                Profitable investments
+                            </span>
+
+                            <strong id="investmentProfitableCount">
+                                0
+                            </strong>
+
+                            <small>
+                                Based on realized results
+                            </small>
+
+                        </article>
+
+                    </div>
+
+
+                    <div class="profile-divider investment-section-divider"></div>
+
+
+                    <!-- STAGE 1: ADD INVESTMENT -->
+                    <section
+                        class="investment-stage investment-add-stage"
+                        aria-labelledby="addInvestmentHeading"
+                    >
+
+                        <div class="investment-form-heading">
+
+                            <div>
+
+                                <span class="investment-stage-label">
+                                    STAGE 01
+                                </span>
+
+                                <h4 id="addInvestmentHeading">
+                                    Add investment
+                                </h4>
+
+                                <p>
+                                    Search for your asset and record
+                                    its purchase details.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            id="investmentForm"
+                            class="investment-form"
+                            novalidate
+                        >
+
+                            <div class="investment-form-grid">
+
+                                <!-- COMBINED ASSET SEARCH -->
+                                <div
+                                    class="investment-field investment-asset-search-field"
+                                >
+
+                                    <label for="investmentAssetSearch">
+                                        Asset / stock name or ticker symbol
+                                    </label>
+
+                                    <div class="investment-search-control">
+
+                                        <span
+                                            class="investment-search-icon"
+                                            aria-hidden="true"
+                                        >
+                                            ⌕
+                                        </span>
+
+                                        <input
+                                            type="text"
+                                            id="investmentAssetSearch"
+                                            name="asset_search"
+                                            placeholder="Search company name or ticker (e.g. Infosys or INFY)"
+                                            maxlength="100"
+                                            autocomplete="off"
+                                            aria-autocomplete="list"
+                                            aria-controls="investmentAssetSuggestions"
+                                            aria-expanded="false"
+                                            required
+                                        >
+
+                                        <button
+                                            type="button"
+                                            id="clearInvestmentAssetButton"
+                                            class="investment-search-clear"
+                                            aria-label="Clear asset search"
+                                            hidden
+                                        >
+                                            ×
+                                        </button>
+
+                                    </div>
+
+                                    <!-- SEARCH SUGGESTIONS -->
+                                    <div
+                                        class="investment-asset-suggestions"
+                                        id="investmentAssetSuggestions"
+                                        role="listbox"
+                                        aria-label="Matching assets"
+                                        hidden
+                                    ></div>
+
+                                    <!-- SELECTED ASSET -->
+                                    <div
+                                        class="investment-selected-asset"
+                                        id="investmentSelectedAsset"
+                                        aria-live="polite"
+                                        hidden
+                                    >
+
+                                        <span
+                                            class="selected-asset-indicator"
+                                            aria-hidden="true"
+                                        >
+                                            ✓
+                                        </span>
+
+                                        <span
+                                            id="investmentSelectedAssetName"
+                                        ></span>
+
+                                        <strong
+                                            id="investmentSelectedAssetSymbol"
+                                        ></strong>
+
+                                    </div>
+
+                                    <!-- HIDDEN SELECTED VALUES -->
+                                    <input
+                                        type="hidden"
+                                        id="investmentAssetName"
+                                        name="asset_name"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        id="investmentSymbol"
+                                        name="symbol"
+                                    >
+
+                                    <small class="investment-field-help">
+                                        Select a matching result before
+                                        saving your investment.
+                                    </small>
+
+                                </div>
+
+
+                                <!-- INVESTMENT PRICE -->
+                                
+<!-- INVESTMENT CURRENCY -->
+<div class="investment-field investment-currency-field">
+
+    <label for="investmentCurrencySearch">
+        Investment currency
+    </label>
+
+    <input
+        type="text"
+        id="investmentCurrencySearch"
+        list="investmentCurrencyOptions"
+        placeholder="Search currency (e.g. INR, USD, EUR)"
+        autocomplete="off"
+        value="INR — Indian Rupee (₹)"
+        required
+    >
+
+    <datalist id="investmentCurrencyOptions">
+        <option value="INR — Indian Rupee (₹)"></option>
+        <option value="USD — US Dollar ($)"></option>
+        <option value="GBP — British Pound (£)"></option>
+        <option value="EUR — Euro (€)"></option>
+        <option value="JPY — Japanese Yen (¥)"></option>
+        <option value="AED — UAE Dirham (د.إ)"></option>
+        <option value="CAD — Canadian Dollar (C$)"></option>
+        <option value="AUD — Australian Dollar (A$)"></option>
+        <option value="CHF — Swiss Franc (CHF)"></option>
+        <option value="CNY — Chinese Yuan (¥)"></option>
+        <option value="SGD — Singapore Dollar (S$)"></option>
+        <option value="SAR — Saudi Riyal (ر.س)"></option>
+        <option value="KRW — South Korean Won (₩)"></option>
+        <option value="BRL — Brazilian Real (R$)"></option>
+        <option value="ZAR — South African Rand (R)"></option>
+        <option value="NZD — New Zealand Dollar (NZ$)"></option>
+        <option value="MYR — Malaysian Ringgit (RM)"></option>
+        <option value="IDR — Indonesian Rupiah (Rp)"></option>
+        <option value="THB — Thai Baht (฿)"></option>
+        <option value="MXN — Mexican Peso ($)"></option>
+        <option value="BDT — Bangladeshi Taka (৳)"></option>
+        <option value="PKR — Pakistani Rupee (₨)"></option>
+        <option value="NPR — Nepalese Rupee (रु)"></option>
+        <option value="LKR — Sri Lankan Rupee (Rs)"></option>
+        <option value="NGN — Nigerian Naira (₦)"></option>
+        <option value="KES — Kenyan Shilling (KSh)"></option>
+        <option value="EGP — Egyptian Pound (E£)"></option>
+        <option value="TRY — Turkish Lira (₺)"></option>
+        <option value="SEK — Swedish Krona (kr)"></option>
+        <option value="NOK — Norwegian Krone (kr)"></option>
+        <option value="DKK — Danish Krone (kr)"></option>
+        <option value="PLN — Polish Zloty (zł)"></option>
+        <option value="QAR — Qatari Riyal (ر.ق)"></option>
+        <option value="KWD — Kuwaiti Dinar (د.ك)"></option>
+        <option value="BHD — Bahraini Dinar (د.ب)"></option>
+        <option value="OMR — Omani Rial (ر.ع.)"></option>
+        <option value="PHP — Philippine Peso (₱)"></option>
+        <option value="VND — Vietnamese Dong (₫)"></option>
+        <option value="ARS — Argentine Peso ($)"></option>
+    </datalist>
+
+    <!-- Actual ISO currency code submitted to backend -->
+    <input
+        type="hidden"
+        id="investmentCurrency"
+        name="currency"
+        value="INR"
+    >
+
+    <small class="investment-field-help">
+        Automatically selected from your country. You can search
+        and choose another currency for this investment.
+    </small>
+
+</div>
+
+
+<!-- INVESTMENT PRICE -->
+<label class="investment-field">
+
+    <span>
+        Investment price per share
+        (<span id="investmentPriceCurrencySymbol">₹</span>)
+    </span>
+
+    <input
+        type="number"
+        id="investmentPrice"
+        name="investment_price"
+        min="0.01"
+        step="any"
+        placeholder="e.g. 2500"
+        inputmode="decimal"
+        required
+    >
+
+</label>
+
+
+<!-- TOTAL INVESTMENT AMOUNT -->
+<label class="investment-field">
+
+    <span>
+        Total investment amount
+        (<span id="investmentAmountCurrencySymbol">₹</span>)
+    </span>
+
+    <input
+        type="number"
+        id="investmentAmount"
+        name="investment_amount"
+        min="0.01"
+        step="any"
+        placeholder="e.g. 10000"
+        inputmode="decimal"
+        required
+    >
+
+</label>
+
+
+
+                                <!-- INVESTMENT DATE -->
+                                <label class="investment-field">
+
+                                    <span>
+                                        Investment date
+                                    </span>
+
+                                    <input
+                                        type="date"
+                                        id="investmentBuyDate"
+                                        name="buy_date"
+                                        required
+                                    >
+
+                                </label>
+
+                            </div>
+
+
+                            <div class="investment-form-hint">
+
+                                <strong>Purchase calculation</strong>
+
+                                <p>
+                                    The system calculates the quantity
+                                    internally using your investment
+                                    amount and purchase price.
+                                </p>
+
+                                <p>
+                                    Quantity is not displayed in your
+                                    investment records.
+                                </p>
+
+                            </div>
+
+
+                            <div class="investment-form-actions">
+
+                                <button
+                                    class="button button-primary"
+                                    id="saveInvestmentButton"
+                                    type="submit"
+                                >
+                                    Save investment
+                                </button>
+
+                                <span
+                                    class="investment-form-status"
+                                    id="investmentFormStatus"
+                                    role="status"
+                                    aria-live="polite"
+                                ></span>
+
+                            </div>
+
+                        </form>
+
+                    </section>
+
+
+                    <div class="profile-divider investment-section-divider"></div>
+
+
+                    <!-- STAGE 2: OPEN INVESTMENTS -->
+                    <section
+                        class="investment-stage investment-open-stage"
+                        aria-labelledby="openInvestmentsHeading"
+                    >
+
+                        <div class="investment-list-heading">
+
+                            <div>
+
+                                <span class="investment-stage-label">
+                                    STAGE 02
+                                </span>
+
+                                <h4 id="openInvestmentsHeading">
+                                    Open investments
+                                </h4>
+
+                                <p>
+                                    These investments are still open.
+                                    Add withdrawal details when you
+                                    complete an investment.
+                                </p>
+
+                            </div>
+
+                            <button
+                                class="button button-outline investment-refresh-button"
+                                id="refreshInvestmentsButton"
+                                type="button"
+                            >
+                                Refresh
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            class="investment-list-message"
+                            id="investmentListMessage"
+                            role="status"
+                            aria-live="polite"
+                            hidden
+                        ></div>
+
+
+                        <div class="investment-table-wrap">
+
+                            <table class="investment-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th scope="col">Asset</th>
+                                        <th scope="col">Investment date</th>
+                                        <th scope="col">Investment price</th>
+                                        <th scope="col">Amount invested</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody id="openInvestmentsBody">
+
+                                    <tr>
+
+                                        <td
+                                            colspan="5"
+                                            class="investment-empty-cell"
+                                        >
+                                            Your open investments will
+                                            appear here.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </section>
+
+
+                    <div class="profile-divider investment-section-divider"></div>
+
+
+                    <!-- STAGE 3: COMPLETED INVESTMENTS -->
+                    <section
+                        class="investment-stage investment-completed-stage"
+                        aria-labelledby="completedInvestmentsHeading"
+                    >
+
+                        <div class="investment-list-heading">
+
+                            <div>
+
+                                <span class="investment-stage-label">
+                                    STAGE 03
+                                </span>
+
+                                <h4 id="completedInvestmentsHeading">
+                                    Completed investments
+                                </h4>
+
+                                <p>
+                                    Review your completed withdrawals
+                                    and realized investment performance.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="investment-table-wrap">
+
+                            <table class="investment-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th scope="col">Asset</th>
+                                        <th scope="col">Investment date</th>
+                                        <th scope="col">Investment price</th>
+                                        <th scope="col">Amount invested</th>
+                                        <th scope="col">Withdrawal date</th>
+                                        <th scope="col">Withdrawal price</th>
+                                        <th scope="col">Withdrawal amount</th>
+                                        <th scope="col">Profit / loss</th>
+                                        <th scope="col">Return</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody id="completedInvestmentsBody">
+
+                                    <tr>
+
+                                        <td
+                                            colspan="10"
+                                            class="investment-empty-cell"
+                                        >
+                                            Your completed investments
+                                            will appear here.
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- TRACKER DISCLAIMER -->
+                    <p class="investment-disclaimer">
+                        This tracker records investment prices and amounts
+                        entered manually. It does not execute trades or
+                        independently verify transactions. Quantity is
+                        calculated internally. Open investments are not
+                        included in realized profit / loss. Fees and taxes
+                        are not included in calculations.
+                    </p>
+
+                </section>
+
+            </div>
+
+
+            <!-- WITHDRAWAL MODAL -->
+            <div
+                class="investment-modal"
+                id="withdrawalModal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="withdrawalModalHeading"
+                hidden
+            >
+
+                <div
+                    class="investment-modal-backdrop"
+                    id="withdrawalModalBackdrop"
+                ></div>
+
+                <div class="investment-modal-content">
+
+                    <div class="investment-modal-heading">
+
+                        <div>
+
+                            <span class="investment-stage-label">
+                                COMPLETE INVESTMENT
+                            </span>
+
+                            <h3 id="withdrawalModalHeading">
+                                Record withdrawal
+                            </h3>
+
+                            <p>
+                                Enter the actual withdrawal price and date
+                                to complete this investment.
+                            </p>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="investment-modal-close"
+                            id="closeWithdrawalModalButton"
+                            aria-label="Close withdrawal form"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="withdrawal-asset-summary"
+                        id="withdrawalAssetSummary"
+                    >
+                        <strong id="withdrawalAssetName">Selected asset</strong>
+                        <span id="withdrawalAssetSymbol"></span>
+                    </div>
+
+
+                    <form
+                        id="withdrawalForm"
+                        class="withdrawal-form"
+                        novalidate
+                    >
+
+                        <input
+                            type="hidden"
+                            id="withdrawalInvestmentId"
+                            name="investment_id"
+                        >
+
+                        
+<label class="investment-field">
+
+    <span>
+        Withdrawal price per share
+        (<span id="withdrawalCurrencySymbol">₹</span>)
+    </span>
+
+    <input
+        type="number"
+        id="investmentWithdrawalPrice"
+        name="withdrawal_price"
+        min="0.01"
+        step="any"
+        placeholder="Enter actual withdrawal price"
+        inputmode="decimal"
+        required
+    >
+
+</label>
+
+
+
+                        <label class="investment-field">
+
+                            <span>
+                                Withdrawal date
+                            </span>
+
+                            <input
+                                type="date"
+                                id="investmentSellDate"
+                                name="withdrawal_date"
+                                required
+                            >
+
+                        </label>
+
+
+                        <div
+                            class="withdrawal-form-message"
+                            id="withdrawalFormMessage"
+                            role="status"
+                            aria-live="polite"
+                            hidden
+                        ></div>
+
+
+                        <div class="investment-modal-actions">
+
+                            <button
+                                type="button"
+                                class="button button-outline"
+                                id="cancelWithdrawalButton"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="button button-primary"
+                                id="confirmWithdrawalButton"
+                            >
+                                Complete investment
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- ERROR STATE -->
+            <section
+                class="profile-error-state"
+                id="profileErrorState"
+                hidden
+                aria-labelledby="profileErrorHeading"
+            >
+
+                <div
+                    class="profile-error-icon"
+                    aria-hidden="true"
+                >
+                    !
+                </div>
+
+                <h3 id="profileErrorHeading">
+                    Account information unavailable
+                </h3>
+
+                <p id="profileErrorDescription">
+                    We couldn't load your account information right now.
+                </p>
+
+                <button
+                    class="button button-primary"
+                    id="retryProfileButton"
+                    type="button"
+                >
+                    Try Again
+                </button>
+
+            </section>
+
+
+            <!-- DISCLAIMER -->
+            <footer class="profile-disclaimer">
+
+                <span aria-hidden="true">ⓘ</span>
+
+                <p>
+                    <strong>Important:</strong>
+                    Market Plus AI provides approximate, model-based
+                    analysis for informational and educational purposes.
+                    Predictions are not guarantees of future prices or
+                    profit. Market values can change, and investment
+                    decisions involve risk.
+                </p>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+    {% include "partials/assistant_widget.html" %}
+
+</body>
+</html>

@@ -1,0 +1,600 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="description" content="Generate AI-based stock predictions using available historical market data.">
+    <title>AI Predictions | Market Plus AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/predictions.css') }}">
+
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/predictions.js') }}" defer></script>
+</head>
+
+<body class="app-page predictions-page">
+<div class="app-shell"
+     id="predictionsPage"
+     data-what-if-url="{{ url_for('what_if_market') }}">
+    <aside class="app-sidebar" id="appSidebar">
+
+        <a class="sidebar-brand" href="{{ url_for('dashboard') }}">
+            <span class="sidebar-brand-icon">M+</span>
+            <span class="sidebar-brand-text">
+                <span class="sidebar-brand-name">Market Plus</span>
+                <span class="sidebar-brand-subtitle">AI INTELLIGENCE</span>
+            </span>
+        </a>
+
+        <div class="sidebar-section-label">WORKSPACE</div>
+
+        <nav class="sidebar-navigation" aria-label="Main navigation">
+
+            <a class="sidebar-link" href="{{ url_for('dashboard') }}">
+                <span class="sidebar-link-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('stock_search') }}">
+                <span class="sidebar-link-icon">⌕</span>
+                <span>Explore Assets</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('what_if_market') }}">
+                <span class="sidebar-link-icon">◉</span>
+                <span>What-If Market</span>
+            </a>
+
+            <a class="sidebar-link active"
+               href="{{ url_for('predictions') }}"
+               aria-current="page">
+                <span class="sidebar-link-icon">↗</span>
+                <span>AI Predictions</span>
+            </a>
+
+        
+             
+            <a class="sidebar-link" href="{{ url_for('prediction_history') }}">
+                <span class="sidebar-link-icon">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('news_sentiment') }}">
+                <span class="sidebar-link-icon">▤</span>
+                <span>News &amp; Sentiment</span>
+            </a>
+             
+
+            <a class="sidebar-link" href="{{ url_for('alerts') }}">
+                <span class="sidebar-link-icon">♧</span>
+                <span>Price Alerts</span>
+            </a>
+
+            <a class="sidebar-link" href="{{ url_for('profile') }}">
+                <span class="sidebar-link-icon">◎</span>
+                <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-status">
+                <span class="status-dot"></span>
+                <span>Prediction workspace</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" hidden></div>
+
+    <main class="app-main">
+
+        <header class="app-topbar">
+
+            <div class="topbar-left">
+
+                <button class="mobile-menu-button"
+                        id="mobileMenuButton"
+                        type="button"
+                        aria-label="Open navigation menu"
+                        aria-expanded="false">
+                    ☰
+                </button>
+
+                <div>
+                    <div class="topbar-eyebrow">INTELLIGENT ANALYSIS</div>
+                    <h1>AI Predictions</h1>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+                <span class="topbar-date" id="predictionPageDate">
+                    Market analysis
+                </span>
+
+                <a class="topbar-avatar"
+                   id="topbarAvatar"
+                   href="{{ url_for('profile') }}">
+                    MP
+                </a>
+            </div>
+
+        </header>
+
+        <section class="predictions-content">
+
+            <div class="prediction-hero">
+
+                <div class="prediction-hero-copy">
+
+                    <span class="eyebrow-pill">
+                        <span class="hero-pulse"></span>
+                        AI-POWERED ANALYSIS
+                    </span>
+
+                    <h2>
+                        Understand possible trends with
+                        <span>AI predictions.</span>
+                    </h2>
+
+                    <p>
+                        Select a stock and time horizon to request a model-based
+                        forecast using the data available to Market Plus AI.
+                    </p>
+
+                </div>
+
+                <div class="hero-orbit" aria-hidden="true">
+
+                    <div class="orbit orbit-one"></div>
+                    <div class="orbit orbit-two"></div>
+
+                    <div class="orbit-center">
+                        <span class="orbit-spark">✦</span>
+                        <strong>AI</strong>
+                        <small>ANALYTICS</small>
+                    </div>
+
+                    <span class="orbit-node node-one">↗</span>
+                    <span class="orbit-node node-two">◈</span>
+                    <span class="orbit-node node-three">⌁</span>
+
+                </div>
+
+            </div>
+
+            <div class="prediction-page-message"
+                 id="predictionPageMessage"
+                 role="status"
+                 aria-live="polite"
+                 hidden>
+            </div>
+
+            <div class="prediction-workspace">
+
+                <!-- PREDICTION FORM -->
+                <section class="prediction-panel prediction-form-panel">
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <span class="section-kicker">CONFIGURE ANALYSIS</span>
+                            <h2>Create a prediction</h2>
+                            <p>
+                                Choose an asset and the supported prediction duration.
+                            </p>
+                        </div>
+
+                        <span class="panel-step">01</span>
+
+                    </div>
+
+                    <form id="predictionForm" novalidate>
+
+                        <div class="form-field">
+
+                            <label for="predictionSymbol">
+                                Stock symbol or company
+                            </label>
+
+                            <div class="asset-input-wrap">
+
+                                <span class="input-leading-icon" aria-hidden="true">
+                                    ⌕
+                                </span>
+
+                                <input
+                                    id="predictionSymbol"
+                                    name="symbol"
+                                    type="text"
+                                    placeholder="Search company name or symbol"
+                                    autocomplete="off"
+                                    maxlength="80"
+                                    required
+                                    role="combobox"
+                                    aria-autocomplete="list"
+                                    aria-expanded="false"
+                                    aria-controls="predictionStockSuggestions"
+                                >
+
+                                <span id="predictionSearchLoading" hidden>
+                                    Searching...
+                                </span>
+
+                                <div
+                                    id="predictionStockSuggestions"
+                                    class="prediction-stock-dropdown"
+                                    role="listbox"
+                                    hidden>
+                                </div>
+
+                            </div>
+
+                            <small class="field-hint">
+                                Search by company name or ticker symbol.
+                                Select a matching stock before generating your prediction.
+                            </small>
+
+                        </div>
+
+                        <div class="form-field">
+
+                            <label for="predictionDuration">
+                                Prediction duration
+                            </label>
+
+                            <div class="select-wrap">
+
+                                <select id="predictionDuration"
+                                        name="duration"
+                                        required>
+
+                                    <option value="1" selected>1 day</option>
+                                    <option value="7">7 days</option>
+                                    <option value="30">30 days (about 1 month)</option>
+
+                                </select>
+
+                                <span class="select-arrow" aria-hidden="true">⌄</span>
+
+                            </div>
+
+                            <small class="field-hint">
+                                Available durations depend on the prediction service.
+                                Longer horizons can be more uncertain.
+                            </small>
+
+                        </div>
+
+                        <div class="form-field">
+
+                            <label for="predictionModel">
+                                AI prediction model
+                            </label>
+
+                            <div class="select-wrap">
+
+                                <select id="predictionModel"
+                                        name="model_name"
+                                        required>
+
+                                    <option value="Random Forest" selected>
+                                        Random Forest
+                                    </option>
+
+                                    <option value="Linear Regression">
+                                        Linear Regression
+                                    </option>
+
+                                    <option value="LSTM + Transformer">
+                                        LSTM + Transformer (Deep Learning)
+                                    </option>
+
+                                </select>
+
+                                <span class="select-arrow" aria-hidden="true">⌄</span>
+
+                            </div>
+
+                            <small class="field-hint">
+                                Choose a model for this forecast. LSTM + Transformer
+                                uses a neural-network architecture and may take longer.
+                            </small>
+
+                        </div>
+
+                        <div class="prediction-form-notice">
+
+                            <span class="notice-icon" aria-hidden="true">ⓘ</span>
+
+                            <p>
+                                Predictions are estimates based on available data.
+                                They do not guarantee a future price or investment profit.
+                            </p>
+
+                        </div>
+
+                        <button class="primary-prediction-button"
+                                id="runPredictionButton"
+                                type="submit">
+
+                            <span class="button-spark" aria-hidden="true">✦</span>
+
+                            <span id="runPredictionButtonText">
+                                Generate AI Prediction
+                            </span>
+
+                            <span class="button-arrow" aria-hidden="true">→</span>
+
+                        </button>
+
+                    </form>
+
+                </section>
+
+                <!-- PREDICTION RESULTS -->
+                <section class="prediction-panel result-panel"
+                         aria-labelledby="predictionResultHeading">
+
+                    <div class="panel-heading result-panel-heading">
+
+                        <div>
+                            <span class="section-kicker">MODEL OUTPUT</span>
+
+                            <h2 id="predictionResultHeading">
+                                Prediction results
+                            </h2>
+
+                            <p id="predictionResultSubtitle">
+                                Your result will appear here.
+                            </p>
+                        </div>
+
+                        <span class="result-status" id="predictionStatusBadge">
+                            READY
+                        </span>
+
+                    </div>
+
+                    <!-- EMPTY STATE -->
+                    <div class="result-placeholder" id="predictionPlaceholder">
+
+                        <div class="placeholder-illustration" aria-hidden="true">
+
+                            <div class="placeholder-chart">
+                                <span></span><span></span><span></span>
+                                <span></span><span></span><span></span>
+                                <i>↗</i>
+                            </div>
+
+                        </div>
+
+                        <h3>Ready to analyse</h3>
+
+                        <p>
+                            Enter a stock symbol, choose a duration, and generate
+                            a prediction to view the available model results.
+                        </p>
+
+                        <div class="placeholder-features">
+                            <span>◷ Time horizon</span>
+                            <span>◎ Model confidence</span>
+                            <span>✧ Explanation</span>
+                        </div>
+
+                    </div>
+
+                    <!-- SUCCESSFUL PREDICTION RESULT -->
+                    <div class="prediction-result-content"
+                         id="predictionResultContent"
+                         hidden>
+
+                        <div class="result-primary-card">
+
+                            <div class="result-primary-top">
+
+                                <div>
+                                    <span class="result-label">
+                                        Estimated future price
+                                    </span>
+
+                                    <h3 id="predictedPriceValue">—</h3>
+                                </div>
+
+                                <span class="trend-indicator"
+                                      id="predictionTrendIndicator">
+                                    —
+                                </span>
+
+                            </div>
+
+                            <div class="result-primary-bottom">
+
+                                <div>
+                                    <span>Current/reference price</span>
+                                    <strong id="predictionCurrentPrice">—</strong>
+                                </div>
+
+                                <div>
+                                    <span>Estimated movement</span>
+                                    <strong id="predictionChangeValue">—</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="result-metrics-grid">
+
+                            <article class="result-metric-card">
+
+                                <span class="metric-label">
+                                    Prediction horizon
+                                </span>
+
+                                <strong id="predictionHorizonValue">—</strong>
+
+                                <small>Requested duration</small>
+
+                            </article>
+
+                            <article class="result-metric-card">
+
+                                <span class="metric-label">
+                                    Model confidence
+                                </span>
+
+                                <strong id="predictionConfidenceValue">
+                                    Not provided
+                                </strong>
+
+                                <small id="predictionConfidenceNote">
+                                    Displayed only when supported by the model.
+                                </small>
+
+                            </article>
+
+                        </div>
+
+                        <div class="recommendation-card"
+                             id="predictionRecommendationCard">
+
+                            <div class="recommendation-icon"
+                                 id="predictionRecommendationIcon"
+                                 aria-hidden="true">
+                                ✦
+                            </div>
+
+                        </div>
+
+                        <!-- INVESTMENT ACTION -->
+                        <div class="prediction-investment-container"
+                             id="predictionInvestmentContainer"
+                             hidden>
+
+                            <div class="investment-action-message">
+
+                                <strong>Ready to invest?</strong>
+
+                                <p>
+                                    Continue to your profile to record this asset
+                                    in your investment tracker.
+                                </p>
+
+                            </div>
+
+                            <a
+                                class="investment-action-button"
+                                id="investFromPredictionButton"
+                                href="{{ url_for('profile') }}#investmentTracker">
+
+                                <span aria-hidden="true">＋</span>
+                                Invest in This Asset
+                                <span aria-hidden="true">→</span>
+
+                            </a>
+
+                        </div>
+
+                        <!-- NEW: WHAT-IF MARKET ACTION -->
+                        <div class="prediction-whatif-container"
+                             id="predictionWhatIfContainer"
+                             hidden>
+
+                            <div class="prediction-whatif-message">
+
+                                <span class="prediction-whatif-icon"
+                                      aria-hidden="true">
+                                    ✧
+                                </span>
+
+                                <div>
+                                    <strong>Explore What-If Market</strong>
+
+                                    <p>
+                                        Use this prediction to compare hypothetical
+                                        market scenarios, potential returns and risk.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <button
+                                class="prediction-whatif-button"
+                                id="openWhatIfButton"
+                                type="button">
+
+                                <span aria-hidden="true">✧</span>
+                                Open What-If Market
+                                <span aria-hidden="true">→</span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <section class="prediction-bottom-grid">
+
+                <article class="prediction-info-card">
+                    <span class="info-card-icon" aria-hidden="true">◷</span>
+                    <h3>Time horizon matters</h3>
+                    <p>
+                        Forecasts over different periods can vary. Earnings,
+                        economic conditions, company developments, and unexpected
+                        events can change market prices.
+                    </p>
+                </article>
+
+                <article class="prediction-info-card">
+                    <span class="info-card-icon" aria-hidden="true">◇</span>
+                    <h3>Understand uncertainty</h3>
+                    <p>
+                        Historical patterns do not guarantee future results.
+                        Use forecasts alongside independent research.
+                    </p>
+                </article>
+
+                <article class="prediction-info-card">
+                    <span class="info-card-icon" aria-hidden="true">⌁</span>
+                    <h3>Model transparency</h3>
+                    <p>
+                        Confidence and explanations are displayed only when the
+                        prediction service supplies meaningful values.
+                    </p>
+                </article>
+
+            </section>
+
+            <footer class="predictions-disclaimer">
+
+                <strong>Important disclaimer</strong>
+
+                <p>
+                    Market Plus AI provides informational estimates using available
+                    market data and models. Predictions and directional indicators
+                    may be inaccurate or unavailable. Nothing on this page guarantees
+                    profit or prevents loss. This application does not execute trades.
+                </p>
+
+            </footer>
+
+        </section>
+
+    </main>
+
+</div>
+
+        {% include "partials/assistant_widget.html" %}
+
+</body>
+</html>

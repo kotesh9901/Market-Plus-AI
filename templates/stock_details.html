@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="description" content="Explore Yahoo Finance stock quotes, market statistics, historical price charts, and AI-powered analysis with Market Plus AI.">
+
+    <title>Stock Details | Market Plus AI</title>
+
+    <!-- Shared styles -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/common.css') }}">
+
+    <!-- Stock search and details styles -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/stocks.css') }}">
+
+    <!-- Chart.js for the historical price graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+
+    <!-- Shared application JavaScript -->
+    <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+
+    <!-- Stock details JavaScript -->
+    <script src="{{ url_for('static', filename='js/stock_details.js') }}" defer></script>
+</head>
+
+<body class="app-page dashboard-page stock-details-page">
+
+    <div class="app-shell">
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="app-sidebar" id="dashboardSidebar">
+
+            <a href="{{ url_for('dashboard') }}" class="sidebar-brand">
+                <span class="sidebar-brand-icon" aria-hidden="true">M+</span>
+
+                <span class="sidebar-brand-text">
+                    <span class="sidebar-brand-name">Market Plus</span>
+                    <span class="sidebar-brand-subtitle">INTELLIGENT ASSETS</span>
+                </span>
+            </a>
+
+            <div class="sidebar-section-label">WORKSPACE</div>
+
+            <nav class="sidebar-navigation" aria-label="Main navigation">
+
+                <a href="{{ url_for('dashboard') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">⌂</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('stock_search') }}"
+                   class="sidebar-link active"
+                   aria-current="page">
+                    <span class="sidebar-link-icon" aria-hidden="true">⌕</span>
+                    <span>Explore Assets</span>
+                </a>
+
+                <a href="{{ url_for('predictions') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">⌁</span>
+                    <span>AI Predictions</span>
+                </a>
+
+                <a href="{{ url_for('prediction_history') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">◷</span>
+                    <span>Prediction History</span>
+                </a>
+
+                <a href="{{ url_for('news_sentiment') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">▤</span>
+                    <span>News &amp; Sentiment</span>
+                </a>
+                <a class="sidebar-link" href="{{ url_for('what_if_market') }}">
+                    <span class="nav-icon">◉</span>
+                    <span>What-If Market</span>
+                </a>
+
+                <a href="{{ url_for('alerts') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">♧</span>
+                    <span>Price Alerts</span>
+                    <span class="sidebar-link-badge"
+                          id="sidebarAlertCount"
+                          hidden>0</span>
+                </a>
+
+                <a href="{{ url_for('profile') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon" aria-hidden="true">◎</span>
+                    <span>My Profile</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="sidebar-security-card">
+                    <span class="security-indicator" aria-hidden="true"></span>
+
+                    <div>
+                        <strong>Market Plus AI</strong>
+                        <p>Intelligent market insights</p>
+                    </div>
+                </div>
+
+                 
+
+            </div>
+
+        </aside>
+
+        <!-- Mobile navigation overlay -->
+        <button type="button"
+                class="sidebar-overlay"
+                id="sidebarOverlay"
+                aria-label="Close navigation menu"
+                hidden>
+        </button>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="app-main">
+
+            <!-- Topbar -->
+            <header class="app-topbar">
+
+                <div class="topbar-left">
+
+                    <button type="button"
+                            class="mobile-menu-button"
+                            id="mobileMenuButton"
+                            aria-label="Open navigation menu"
+                            aria-controls="dashboardSidebar"
+                            aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="topbar-page-heading">
+                        <span class="topbar-eyebrow">MARKET DISCOVERY</span>
+                        <h1>Stock Details</h1>
+                    </div>
+
+                </div>
+
+                <div class="topbar-right">
+
+                    <a href="{{ url_for('alerts') }}"
+                       class="topbar-icon-button"
+                       aria-label="View price alerts"
+                       title="Price alerts">
+                        ♧
+                    </a>
+
+                    <a href="{{ url_for('profile') }}" class="topbar-user">
+                        <span class="topbar-avatar" id="topbarAvatar">U</span>
+
+                        <span class="topbar-user-details">
+                            <strong id="topbarUserName">Your Account</strong>
+                            <span>Market Plus member</span>
+                        </span>
+                    </a>
+
+                </div>
+
+            </header>
+
+            <!-- Page content -->
+            <div class="page-content stock-details-content">
+
+                <!-- Breadcrumb and page heading -->
+                <section class="stock-details-page-heading">
+
+                    <div class="stock-details-breadcrumb">
+                        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                        <span aria-hidden="true">/</span>
+                        <a href="{{ url_for('stock_search') }}">Explore Assets</a>
+                        <span aria-hidden="true">/</span>
+                        <span>Stock Details</span>
+                    </div>
+
+                    <div class="stock-details-heading-row">
+
+                        <div>
+                            <span class="section-eyebrow">ASSET OVERVIEW</span>
+
+                            <h2>
+                                Understand the
+                                <span class="gradient-text">market movement.</span>
+                            </h2>
+
+                            <p>
+                                Review available quotes, historical prices, and
+                                market statistics for your selected stock.
+                            </p>
+                        </div>
+
+                        <a href="{{ url_for('stock_search') }}"
+                           class="stock-back-button">
+                            <span aria-hidden="true">←</span>
+                            Back to Explore
+                        </a>
+
+                    </div>
+
+                </section>
+
+                <!-- Global status and error messages -->
+                <div id="stockDetailsMessage"
+                     class="stock-search-message"
+                     role="status"
+                     aria-live="polite"
+                     hidden>
+                </div>
+
+                <!-- ================= STOCK OVERVIEW ================= -->
+                <section class="stock-details-overview"
+                         aria-labelledby="assetName">
+
+                    <div class="stock-details-identity">
+
+                        <div class="stock-details-logo"
+                             id="assetLogo"
+                             aria-hidden="true">
+                            --
+                        </div>
+
+                        <div class="stock-details-identity-copy">
+
+                            <div class="stock-details-symbol-row">
+                                <span class="stock-details-symbol"
+                                      id="assetSymbol">
+                                    Loading symbol...
+                                </span>
+
+                                <span class="stock-category-badge"
+                                      id="assetCategory">
+                                    Listed asset
+                                </span>
+                            </div>
+
+                            <h2 id="assetName">Loading stock information...</h2>
+
+                            <p class="stock-details-exchange"
+                               id="assetExchange">
+                                Retrieving available market data...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="stock-details-price-panel">
+
+                        <span class="market-data-label">
+                            Latest available price
+                        </span>
+
+                        <strong class="stock-details-price"
+                                id="assetCurrentPrice">
+                            —
+                        </strong>
+
+                        <span class="stock-details-change neutral"
+                              id="assetPriceChange">
+                            Daily change unavailable
+                        </span>
+
+                        <small id="assetPriceTimestamp">
+                            Waiting for market data...
+                        </small>
+
+                        <span class="stock-market-status"
+                              id="assetMarketStatus">
+                            Market status unavailable
+                        </span>
+
+                    </div>
+
+                </section>
+
+                <!-- ================= MARKET STATISTICS ================= -->
+                <section class="stock-details-section"
+                         aria-labelledby="marketStatisticsHeading">
+
+                    <div class="stock-section-heading">
+                        <div>
+                            <span class="section-eyebrow">MARKET SNAPSHOT</span>
+                            <h2 id="marketStatisticsHeading">Market Statistics</h2>
+
+                            <p class="section-description">
+                                Values reported by the market-data provider.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="stock-details-stat-grid">
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">Previous Close</span>
+                            <strong id="assetPreviousClose">—</strong>
+                            <small>Previous session closing price</small>
+                        </article>
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">Open</span>
+                            <strong id="assetOpenPrice">—</strong>
+                            <small>Reported opening price</small>
+                        </article>
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">Day High</span>
+                            <strong id="assetDayHigh">—</strong>
+                            <small>Reported session high</small>
+                        </article>
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">Day Low</span>
+                            <strong id="assetDayLow">—</strong>
+                            <small>Reported session low</small>
+                        </article>
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">Volume</span>
+                            <strong id="assetVolume">—</strong>
+                            <small>Reported trading volume</small>
+                        </article>
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">Market Cap</span>
+                            <strong id="assetMarketCap">—</strong>
+                            <small>When supplied by the provider</small>
+                        </article>
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">52-Week High</span>
+                            <strong id="asset52WeekHigh">—</strong>
+                            <small>Reported 52-week high</small>
+                        </article>
+
+                        <article class="stock-detail-stat-card">
+                            <span class="stat-card-label">52-Week Low</span>
+                            <strong id="asset52WeekLow">—</strong>
+                            <small>Reported 52-week low</small>
+                        </article>
+
+                    </div>
+
+                </section>
+
+                <!-- ================= HISTORICAL PRICE CHART ================= -->
+                <section class="stock-details-section stock-chart-section"
+                         aria-labelledby="historicalChartHeading">
+
+                    <div class="stock-section-heading stock-chart-heading">
+
+                        <div>
+                            <span class="section-eyebrow">PRICE HISTORY</span>
+
+                            <h2 id="historicalChartHeading">
+                                Historical Price Chart
+                            </h2>
+
+                            <p class="section-description">
+                                Explore historical closing prices retrieved
+                                from Yahoo Finance.
+                            </p>
+                        </div>
+
+                        <div class="chart-period-control">
+
+                            <label for="chartPeriodSelect">
+                                Chart period
+                            </label>
+
+                            <select id="chartPeriodSelect"
+                                    aria-label="Select historical chart period">
+
+                                <option value="1d">1 Day</option>
+                                <option value="5d">5 Days</option>
+                                <option value="1mo">1 Month</option>
+                                <option value="3mo" selected>3 Months</option>
+                                <option value="6mo">6 Months</option>
+                                <option value="1y">1 Year</option>
+                                <option value="5y">5 Years</option>
+                                <option value="max">Maximum Available</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Chart summary -->
+                    <div class="stock-chart-summary">
+
+                        <div>
+                            <span class="market-data-label">Selected stock</span>
+                            <strong id="chartAssetSymbol">—</strong>
+                        </div>
+
+                        <div>
+                            <span class="market-data-label">Data points</span>
+                            <strong id="chartDataCount">—</strong>
+                        </div>
+
+                        <div>
+                            <span class="market-data-label">Latest chart close</span>
+                            <strong id="chartLatestClose">—</strong>
+                        </div>
+
+                    </div>
+
+                    <!-- Historical graph -->
+                    <div class="stock-chart-container"
+                         id="stockChartContainer"
+                         aria-busy="false">
+
+                        <div class="stock-chart-empty"
+                             id="stockChartEmpty">
+
+                            <div class="chart-empty-icon" aria-hidden="true">
+                                ↗
+                            </div>
+
+                            <h3>Historical price chart</h3>
+
+                            <p>
+                                The graph will appear after historical market
+                                data has been retrieved successfully.
+                            </p>
+
+                        </div>
+
+                        <div class="stock-chart-canvas-wrapper"
+                             id="stockChartCanvasWrapper"
+                             hidden>
+
+                            <canvas id="stockPriceChart"
+                                    role="img"
+                                    aria-label="Historical stock closing prices">
+                                Historical stock price chart.
+                            </canvas>
+
+                        </div>
+
+                    </div>
+
+                    <p class="chart-data-note" id="chartDataNote">
+                        Historical prices may be delayed or unavailable.
+                        The selected period determines which data is requested.
+                        Historical performance does not guarantee future results.
+                    </p>
+
+                </section>
+
+                <!-- ================= HISTORICAL DATA TABLE ================= -->
+                <section class="stock-details-section stock-history-section"
+                         aria-labelledby="historicalDataHeading">
+
+                    <div class="stock-section-heading">
+
+                        <div>
+                            <span class="section-eyebrow">HISTORICAL RECORDS</span>
+
+                            <h2 id="historicalDataHeading">
+                                Historical Market Data
+                            </h2>
+
+                            <p class="section-description">
+                                Review the available date, open, high, low,
+                                close, adjusted close, and volume values.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="stock-table-wrapper">
+
+                        <table class="stock-history-table">
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Open</th>
+                                    <th scope="col">High</th>
+                                    <th scope="col">Low</th>
+                                    <th scope="col">Close</th>
+                                    <th scope="col">Adj. Close</th>
+                                    <th scope="col">Volume</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="stockHistoryTableBody">
+
+                                <tr>
+                                    <td colspan="7" class="stock-table-empty">
+                                        Historical records will appear
+                                        after data has been retrieved.
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div class="stock-history-footer">
+
+                        <span id="stockHistorySummary">
+                            No historical records loaded.
+                        </span>
+
+                        <div class="stock-history-pagination">
+
+                            <button type="button"
+                                    id="stockHistoryPrevious"
+                                    disabled>
+                                ← Previous
+                            </button>
+
+                            <span id="stockHistoryPageNumber">Page 1</span>
+
+                            <button type="button"
+                                    id="stockHistoryNext"
+                                    disabled>
+                                Next →
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                 
+                <!-- ================= AI PREDICTION ================= -->
+                <section class="stock-prediction-cta">
+
+                    <div class="prediction-cta-icon" aria-hidden="true">
+                        ✦
+                    </div>
+
+                    <div class="prediction-cta-copy">
+
+                        <span class="section-eyebrow">AI-POWERED ANALYSIS</span>
+
+                        <h2>Explore an AI price prediction</h2>
+
+                        <p>
+                            Continue to AI Predictions to explore the available
+                            model estimates for this stock.
+                        </p>
+
+                    </div>
+
+                    <a class="stock-prediction-button"
+                       id="createPredictionButton"
+                       href="{{ url_for('predictions') }}">
+
+                        Create Prediction
+                        <span aria-hidden="true">→</span>
+
+                    </a>
+
+                </section>
+
+                <!-- ================= RELATED MARKET NEWS ================= -->
+                <section class="stock-details-section stock-related-news"
+                         aria-labelledby="relatedNewsHeading">
+
+                    <div class="stock-section-heading">
+
+                        <div>
+                            <span class="section-eyebrow">MARKET CONTEXT</span>
+
+                            <h2 id="relatedNewsHeading">
+                                Related Market News
+                            </h2>
+
+                            <p class="section-description">
+                                Available reporting that may help explain
+                                market movements.
+                            </p>
+                        </div>
+
+                        <a class="stock-news-link"
+                           id="viewAssetNewsLink"
+                           href="{{ url_for('news_sentiment') }}">
+                            View News &amp; Sentiment →
+                        </a>
+
+                    </div>
+
+                    <div class="stock-related-news-container"
+                         id="stockRelatedNewsContainer"
+                         aria-live="polite">
+
+                        <div class="stock-results-empty">
+                            <span class="empty-state-icon" aria-hidden="true">
+                                ▤
+                            </span>
+
+                            <h3>Market news</h3>
+
+                            <p>
+                                Related news will appear when the news service
+                                returns matching articles.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- ================= DISCLAIMER ================= -->
+                <footer class="stock-data-disclaimer">
+
+                    <span class="disclaimer-icon" aria-hidden="true">ⓘ</span>
+
+                    <p>
+                        <strong>Important:</strong>
+                        Market data is supplied by external services and may be
+                        delayed, incomplete, or unavailable. Historical prices,
+                        company information, and market statistics are shown
+                        only when returned by the provider. AI predictions are
+                        estimates, not guarantees of future prices or profits.
+                        This application does not provide personalized financial advice.
+                    </p>
+
+                </footer>
+
+            </div>
+
+        </main>
+
+    </div>
+    {% include "partials/assistant_widget.html" %}
+
+</body>
+</html>
